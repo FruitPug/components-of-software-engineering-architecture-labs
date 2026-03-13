@@ -1,0 +1,29 @@
+name: architecture_labs
+services:
+  postgres:
+    image: postgres:18.1
+    container_name: architecture_postgres
+    environment:
+      POSTGRES_DB: architecture
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      TZ: Europe/Kyiv
+    ports:
+      - "5432:5432"
+    networks:
+      - architecture_network
+    volumes:
+      - architecture_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d architecture"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+networks:
+  architecture_network:
+    external: true
+    name: architecture_db_network
+
+volumes:
+  architecture_data:
