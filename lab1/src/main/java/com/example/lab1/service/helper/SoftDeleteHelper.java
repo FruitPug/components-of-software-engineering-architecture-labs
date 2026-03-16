@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 @Component
 public class SoftDeleteHelper {
 
-    public <T extends SoftDeletable> ResponseEntity<Void> softDelete(
+    public <T extends SoftDeletable> void softDelete(
             Long id,
             Function<Long, Optional<T>> findById,
             Consumer<T> saveEntity,
@@ -22,7 +22,8 @@ public class SoftDeleteHelper {
         T entity = findById.apply(id).orElseThrow(notFoundSupplier);
 
         if (entity.isDeleted()) {
-            return ResponseEntity.ok().build();
+            ResponseEntity.ok().build();
+            return;
         }
 
         entity.setDeleted(true);
@@ -31,6 +32,6 @@ public class SoftDeleteHelper {
 
         saveEntity.accept(entity);
 
-        return ResponseEntity.ok().build();
+        ResponseEntity.ok().build();
     }
 }
