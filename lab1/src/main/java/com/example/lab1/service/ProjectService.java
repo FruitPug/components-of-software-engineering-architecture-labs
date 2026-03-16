@@ -98,8 +98,6 @@ public class ProjectService {
     ) {
         Page<ProjectEntity> page = projectRepository.searchProjectsFiltered(status, pageable);
 
-        Page<ProjectResponseDto> dtoPage = page.map(ProjectMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(ProjectMapper::toResponseDto);
     }
 }

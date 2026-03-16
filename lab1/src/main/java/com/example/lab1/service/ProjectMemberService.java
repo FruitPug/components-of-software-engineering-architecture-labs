@@ -68,8 +68,6 @@ public class ProjectMemberService {
                 pageable
         );
 
-        Page<ProjectMemberResponseDto> dtoPage = page.map(ProjectMemberMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(ProjectMemberMapper::toResponseDto);
     }
 }

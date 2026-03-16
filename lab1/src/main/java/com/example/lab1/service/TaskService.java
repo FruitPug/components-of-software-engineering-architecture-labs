@@ -109,8 +109,6 @@ public class TaskService {
     ) {
         Page<TaskEntity> page = taskRepository.searchTasksFiltered(status, priority, projectId, assigneeId, pageable);
 
-        Page<TaskResponseDto> dtoPage = page.map(TaskMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(TaskMapper::toResponseDto);
     }
 }

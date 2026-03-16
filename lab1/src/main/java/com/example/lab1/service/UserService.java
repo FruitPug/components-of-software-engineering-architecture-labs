@@ -40,8 +40,6 @@ public class UserService {
     public Page<UserResponseDto> getUsersFiltered(UserRole role, Pageable pageable) {
         Page<UserEntity> page = userRepository.searchUsersFiltered(role, pageable);
 
-        Page<UserResponseDto> dtoPage = page.map(UserMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(UserMapper::toResponseDto);
     }
 }

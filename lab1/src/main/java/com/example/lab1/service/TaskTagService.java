@@ -53,8 +53,6 @@ public class TaskTagService {
     ) {
         Page<TaskTagEntity> page = taskTagRepository.searchTaskTagsFiltered(taskId, tagId, pageable);
 
-        Page<TaskTagResponseDto> dtoPage = page.map(TaskTagMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(TaskTagMapper::toResponseDto);
     }
 }

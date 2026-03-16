@@ -59,8 +59,6 @@ public class TaskCommentService {
                 pageable
         );
 
-        Page<TaskCommentResponseDto> dtoPage = page.map(TaskCommentMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(TaskCommentMapper::toResponseDto);
     }
 }

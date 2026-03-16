@@ -44,8 +44,6 @@ public class TagService {
     public Page<TagResponseDto> getTagsFiltered(String color, Pageable pageable) {
         Page<TagEntity> page = tagRepository.searchTagsFiltered(color, pageable);
 
-        Page<TagResponseDto> dtoPage = page.map(TagMapper::toResponseDto);
-
-        return dtoPage;
+        return page.map(TagMapper::toResponseDto);
     }
 }
