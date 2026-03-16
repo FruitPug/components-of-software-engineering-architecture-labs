@@ -23,18 +23,20 @@ public class TaskCommentController {
             @RequestParam(required = false) Long userId,
             Pageable pageable
     ) {
-        return taskCommentService.getCommentsFiltered(taskId, userId, pageable);
+        return ResponseEntity.ok(taskCommentService.getCommentsFiltered(taskId, userId, pageable));
     }
 
     @PostMapping
     public ResponseEntity<Void> createComment(
             @Valid @RequestBody TaskCommentCreateDto dto
     ) {
-        return taskCommentService.createComment(dto);
+        taskCommentService.createComment(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteComment(@PathVariable Long id) {
-        return taskCommentService.softDeleteComment(id);
+        taskCommentService.softDeleteComment(id);
+        return ResponseEntity.ok().build();
     }
 }

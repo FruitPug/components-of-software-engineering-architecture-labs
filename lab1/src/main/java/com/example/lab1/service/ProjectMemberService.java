@@ -14,7 +14,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +25,7 @@ public class ProjectMemberService {
     private final ProjectMemberRepository projectMemberRepository;
 
     @Transactional
-    public ResponseEntity<Void> createProjectMember(ProjectMemberCreateDto dto) {
+    public void createProjectMember(ProjectMemberCreateDto dto) {
         ProjectEntity project = projectRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
@@ -44,23 +43,19 @@ public class ProjectMemberService {
         );
 
         projectMemberRepository.save(member);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> hardDeleteProject(Long id) {
+    public void hardDeleteProject(Long id) {
         int affected = projectMemberRepository.hardDeleteById(id);
 
         if (affected == 0) {
             throw new IllegalArgumentException("Project member not found");
         }
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Page<ProjectMemberResponseDto>> getProjectMembersFiltered(
+    public Page<ProjectMemberResponseDto> getProjectMembersFiltered(
             Long projectId,
             Long userId,
             ProjectMemberRole role,
@@ -75,6 +70,6 @@ public class ProjectMemberService {
 
         Page<ProjectMemberResponseDto> dtoPage = page.map(ProjectMemberMapper::toResponseDto);
 
-        return ResponseEntity.ok(dtoPage);
+        return dtoPage;
     }
 }

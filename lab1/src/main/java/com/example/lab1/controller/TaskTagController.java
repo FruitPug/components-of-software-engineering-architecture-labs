@@ -23,18 +23,20 @@ public class TaskTagController {
             @RequestParam(required = false) Long tagId,
             Pageable pageable
     ) {
-        return taskTagService.getTaskTagsFiltered(taskId, tagId, pageable);
+        return ResponseEntity.ok(taskTagService.getTaskTagsFiltered(taskId, tagId, pageable));
     }
 
     @PostMapping
     public ResponseEntity<Void> createTaskTag(
             @Valid @RequestBody TaskTagCreateDto dto
     ) {
-        return taskTagService.createTaskTag(dto);
+        taskTagService.createTaskTag(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/hard")
     public ResponseEntity<Void> hardDeleteProject(@PathVariable Long id) {
-        return taskTagService.hardDeleteProject(id);
+        taskTagService.hardDeleteProject(id);
+        return ResponseEntity.ok().build();
     }
 }

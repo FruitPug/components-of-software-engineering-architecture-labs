@@ -29,32 +29,42 @@ public class TaskController {
             @RequestParam(required = false) Long assigneeId,
             Pageable pageable
     ) {
-        return taskService.getTasksFiltered(status, priority, projectId, assigneeId, pageable);
+        return ResponseEntity.ok(taskService.getTasksFiltered(
+                status,
+                priority,
+                projectId,
+                assigneeId,
+                pageable
+        ));
     }
 
     @PostMapping
     public ResponseEntity<Void> createTask(
             @Valid @RequestBody TaskCreateDto dto
     ) {
-        return taskService.createTask(dto);
+        taskService.createTask(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/status")
     public ResponseEntity<Void> updateTaskStatus(
             @Valid @RequestBody TaskStatusUpdateDto dto
     ) {
-        return taskService.updateTaskStatus(dto);
+        taskService.updateTaskStatus(dto);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/assignee")
     public ResponseEntity<Void> reassignTask(
             @Valid @RequestBody TaskReassignDto dto
     ) {
-        return taskService.reassignTask(dto);
+        taskService.reassignTask(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteTask(@PathVariable Long id) {
-        return taskService.softDeleteTask(id);
+        taskService.softDeleteTask(id);
+        return ResponseEntity.ok().build();
     }
 }

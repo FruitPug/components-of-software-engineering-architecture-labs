@@ -20,7 +20,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,14 +35,13 @@ public class ProjectService {
     private final TaskRepository taskRepository;
 
     @Transactional
-    public ResponseEntity<Void> createProject(ProjectCreateDto projectCreateDto) {
+    public void createProject(ProjectCreateDto projectCreateDto) {
         ProjectEntity project = ProjectMapper.fromCreateDto(projectCreateDto);
         projectRepository.save(project);
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> createProjectWithOwner(ProjectCreateWithOwnerDto projectCreateWithOwnerDto) {
+    public void createProjectWithOwner(ProjectCreateWithOwnerDto projectCreateWithOwnerDto) {
 
         UserEntity owner = userRepository.findById(projectCreateWithOwnerDto.getOwnerId())
                 .orElseThrow(() -> new IllegalArgumentException("Owner user not found"));
@@ -59,12 +57,10 @@ public class ProjectService {
         );
 
         projectMemberRepository.save(member);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> softDeleteProject(Long id) {
+    public void softDeleteProject(Long id) {
         softDeleteHelper.softDelete(
                 id,
                 projectRepository::findById,
@@ -73,23 +69,19 @@ public class ProjectService {
         );
 
         taskRepository.softDeleteByProjectId(id, LocalDateTime.now());
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> hardDeleteProject(Long id) {
+    public void hardDeleteProject(Long id) {
         int affected = projectRepository.hardDeleteById(id);
 
         if (affected == 0) {
             throw new IllegalArgumentException("Project not found");
         }
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> updateProjectStatus(ProjectStatusUpdateDto dto) {
+    public void updateProjectStatus(ProjectStatusUpdateDto dto) {
         ProjectEntity project = projectRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
@@ -97,12 +89,10 @@ public class ProjectService {
         project.setUpdatedAt(LocalDateTime.now());
 
         projectRepository.save(project);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Page<ProjectResponseDto>> getProjectsFiltered(
+    public Page<ProjectResponseDto> getProjectsFiltered(
             ProjectStatus status,
             Pageable pageable
     ) {
@@ -110,6 +100,6 @@ public class ProjectService {
 
         Page<ProjectResponseDto> dtoPage = page.map(ProjectMapper::toResponseDto);
 
-        return ResponseEntity.ok(dtoPage);
+        return dtoPage;
     }
 }

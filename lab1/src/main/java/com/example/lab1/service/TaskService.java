@@ -16,7 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,7 +32,7 @@ public class TaskService {
     private final SoftDeleteHelper softDeleteHelper;
 
     @Transactional
-    public ResponseEntity<Void> createTask(TaskCreateDto dto) {
+    public void createTask(TaskCreateDto dto) {
 
         ProjectEntity project = projectRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
@@ -49,12 +48,10 @@ public class TaskService {
 
         TaskEntity task = TaskMapper.createTaskEntity(project, creator, assignee, dto);
         taskRepository.save(task);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> updateTaskStatus(TaskStatusUpdateDto dto) {
+    public void updateTaskStatus(TaskStatusUpdateDto dto) {
         TaskEntity task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
@@ -66,12 +63,10 @@ public class TaskService {
         task.setUpdatedAt(LocalDateTime.now());
 
         taskRepository.save(task);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> reassignTask(TaskReassignDto dto) {
+    public void reassignTask(TaskReassignDto dto) {
 
         TaskEntity task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
@@ -90,12 +85,10 @@ public class TaskService {
         task.setUpdatedAt(LocalDateTime.now());
 
         taskRepository.save(task);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> softDeleteTask(Long id) {
+    public void softDeleteTask(Long id) {
         softDeleteHelper.softDelete(
                 id,
                 taskRepository::findById,
@@ -104,12 +97,10 @@ public class TaskService {
         );
 
         taskCommentRepository.softDeleteByTaskId(id, LocalDateTime.now());
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Page<TaskResponseDto>> getTasksFiltered(
+    public Page<TaskResponseDto> getTasksFiltered(
             TaskStatus status,
             TaskPriority priority,
             Long projectId,
@@ -120,6 +111,6 @@ public class TaskService {
 
         Page<TaskResponseDto> dtoPage = page.map(TaskMapper::toResponseDto);
 
-        return ResponseEntity.ok(dtoPage);
+        return dtoPage;
     }
 }

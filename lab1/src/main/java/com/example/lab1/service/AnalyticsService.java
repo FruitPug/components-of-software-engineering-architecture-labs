@@ -6,7 +6,6 @@ import com.example.lab1.repository.AnalyticsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +14,11 @@ public class AnalyticsService {
 
     private final AnalyticsRepository analyticsRepository;
 
-    public ResponseEntity<Page<ProjectTaskStatusStatsDto>> getTasksByProjectAndStatus(Pageable pageable) {
-        return ResponseEntity.ok(analyticsRepository.tasksByProjectAndStatus(pageable));
+    public Page<ProjectTaskStatusStatsDto> getTasksByProjectAndStatus(Pageable pageable) {
+        return analyticsRepository.tasksByProjectAndStatus(pageable);
     }
 
-    public ResponseEntity<Page<UserDoneTasksStatsDto>> getTopAssigneesByDoneTasks(Pageable pageable) {
-        return ResponseEntity.ok(analyticsRepository.topAssigneesByDoneTasks(pageable));
+    public Page<UserDoneTasksStatsDto> getTopAssigneesByDoneTasks(Pageable pageable) {
+        return analyticsRepository.topAssigneesByDoneTasks(pageable);
     }
 }

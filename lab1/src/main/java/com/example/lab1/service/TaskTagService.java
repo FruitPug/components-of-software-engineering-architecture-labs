@@ -13,7 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +24,7 @@ public class TaskTagService {
     private final TaskTagRepository taskTagRepository;
 
     @Transactional
-    public ResponseEntity<Void> createTaskTag(TaskTagCreateDto dto) {
+    public void createTaskTag(TaskTagCreateDto dto) {
 
         TaskEntity task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
@@ -35,23 +34,19 @@ public class TaskTagService {
 
         TaskTagEntity taskTag = TaskTagMapper.createTaskTagEntity(task, tag);
         taskTagRepository.save(taskTag);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> hardDeleteProject(Long id) {
+    public void hardDeleteProject(Long id) {
         int affected = taskTagRepository.hardDeleteById(id);
 
         if (affected == 0) {
             throw new IllegalArgumentException("Task tag not found");
         }
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Page<TaskTagResponseDto>> getTaskTagsFiltered(
+    public Page<TaskTagResponseDto> getTaskTagsFiltered(
             Long taskId,
             Long tagId,
             Pageable pageable
@@ -60,6 +55,6 @@ public class TaskTagService {
 
         Page<TaskTagResponseDto> dtoPage = page.map(TaskTagMapper::toResponseDto);
 
-        return ResponseEntity.ok(dtoPage);
+        return dtoPage;
     }
 }

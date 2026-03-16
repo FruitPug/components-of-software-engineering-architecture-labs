@@ -25,37 +25,42 @@ public class ProjectController {
             @RequestParam(required = false)ProjectStatus status,
             Pageable pageable
     ) {
-        return projectService.getProjectsFiltered(status, pageable);
+        return ResponseEntity.ok(projectService.getProjectsFiltered(status, pageable));
     }
 
     @PostMapping
     public ResponseEntity<Void> createProject(
             @Valid @RequestBody ProjectCreateDto projectCreateDto
     ) {
-        return projectService.createProject(projectCreateDto);
+        projectService.createProject(projectCreateDto);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/with-owner")
     public ResponseEntity<Void> createProjectWithOwner(
             @Valid @RequestBody ProjectCreateWithOwnerDto projectCreateWithOwnerDto
     ) {
-        return projectService.createProjectWithOwner(projectCreateWithOwnerDto);
+        projectService.createProjectWithOwner(projectCreateWithOwnerDto);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/status")
     public ResponseEntity<Void> updateProjectStatus(
             @Valid @RequestBody ProjectStatusUpdateDto dto
     ) {
-        return projectService.updateProjectStatus(dto);
+        projectService.updateProjectStatus(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteProject(@PathVariable Long id) {
-        return projectService.softDeleteProject(id);
+        projectService.softDeleteProject(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/hard")
     public ResponseEntity<Void> hardDeleteProject(@PathVariable Long id) {
-        return projectService.hardDeleteProject(id);
+        projectService.hardDeleteProject(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,15 +21,14 @@ public class UserService {
     private final SoftDeleteHelper softDeleteHelper;
 
     @Transactional
-    public ResponseEntity<Void> createUser(UserCreateDto dto) {
+    public void createUser(UserCreateDto dto) {
         UserEntity user = UserMapper.fromCreateDto(dto);
         userRepository.save(user);
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> softDeleteUser(Long id) {
-        return softDeleteHelper.softDelete(
+    public void softDeleteUser(Long id) {
+        softDeleteHelper.softDelete(
                 id,
                 userRepository::findById,
                 userRepository::save,
@@ -39,11 +37,11 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<Page<UserResponseDto>> getUsersFiltered(UserRole role, Pageable pageable) {
+    public Page<UserResponseDto> getUsersFiltered(UserRole role, Pageable pageable) {
         Page<UserEntity> page = userRepository.searchUsersFiltered(role, pageable);
 
         Page<UserResponseDto> dtoPage = page.map(UserMapper::toResponseDto);
 
-        return ResponseEntity.ok(dtoPage);
+        return dtoPage;
     }
 }

@@ -22,18 +22,20 @@ public class TagController {
             @RequestParam(required = false) String color,
             Pageable pageable
     ) {
-        return tagService.getTagsFiltered(color, pageable);
+        return ResponseEntity.ok(tagService.getTagsFiltered(color, pageable));
     }
 
     @PostMapping
     public ResponseEntity<Void> createTag(
             @Valid @RequestBody TagCreateDto dto
     ) {
-        return tagService.createTag(dto);
+        tagService.createTag(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteTag(@PathVariable Long id) {
-        return tagService.softDeleteTag(id);
+        tagService.softDeleteTag(id);
+        return ResponseEntity.ok().build();
     }
 }

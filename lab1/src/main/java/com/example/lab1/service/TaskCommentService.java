@@ -14,7 +14,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,7 +26,7 @@ public class TaskCommentService {
     private final SoftDeleteHelper softDeleteHelper;
 
     @Transactional
-    public ResponseEntity<Void> createComment(TaskCommentCreateDto dto) {
+    public void createComment(TaskCommentCreateDto dto) {
         TaskEntity task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
@@ -36,13 +35,11 @@ public class TaskCommentService {
 
         TaskCommentEntity comment = TaskCommentMapper.createTaskCommentEntity(task, author, dto);
         taskCommentRepository.save(comment);
-
-        return ResponseEntity.ok().build();
     }
 
     @Transactional
-    public ResponseEntity<Void> softDeleteComment(Long id) {
-        return softDeleteHelper.softDelete(
+    public void softDeleteComment(Long id) {
+        softDeleteHelper.softDelete(
                 id,
                 taskCommentRepository::findById,
                 taskCommentRepository::save,
@@ -51,7 +48,7 @@ public class TaskCommentService {
     }
 
     @Transactional
-    public ResponseEntity<Page<TaskCommentResponseDto>> getCommentsFiltered(
+    public Page<TaskCommentResponseDto> getCommentsFiltered(
             Long taskId,
             Long userId,
             Pageable pageable
@@ -64,6 +61,6 @@ public class TaskCommentService {
 
         Page<TaskCommentResponseDto> dtoPage = page.map(TaskCommentMapper::toResponseDto);
 
-        return ResponseEntity.ok(dtoPage);
+        return dtoPage;
     }
 }

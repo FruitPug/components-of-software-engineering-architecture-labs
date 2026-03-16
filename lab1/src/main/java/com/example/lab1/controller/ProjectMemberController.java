@@ -25,18 +25,25 @@ public class ProjectMemberController {
             @RequestParam(required = false) ProjectMemberRole role,
             Pageable pageable
     ) {
-        return projectMemberService.getProjectMembersFiltered(projectId, userId, role, pageable);
+        return ResponseEntity.ok(projectMemberService.getProjectMembersFiltered(
+                projectId,
+                userId,
+                role,
+                pageable
+        ));
     }
 
     @PostMapping
     public ResponseEntity<Void> createProjectMember(
             @Valid @RequestBody ProjectMemberCreateDto dto
     ) {
-        return projectMemberService.createProjectMember(dto);
+        projectMemberService.createProjectMember(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/hard")
     public ResponseEntity<Void> hardDeleteProject(@PathVariable Long id) {
-        return projectMemberService.hardDeleteProject(id);
+        projectMemberService.hardDeleteProject(id);
+        return ResponseEntity.ok().build();
     }
 }

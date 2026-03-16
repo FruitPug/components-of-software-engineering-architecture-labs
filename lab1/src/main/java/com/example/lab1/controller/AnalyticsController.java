@@ -18,13 +18,13 @@ public class AnalyticsController {
 
     @GetMapping("/projects/tasks-by-status")
     public ResponseEntity<Page<ProjectTaskStatusStatsDto>> tasksByProjectAndStatus(Pageable pageable) {
-        return analyticsService.getTasksByProjectAndStatus(pageable);
+        return ResponseEntity.ok(analyticsService.getTasksByProjectAndStatus(pageable));
     }
 
     @GetMapping("/users/top-done")
     public ResponseEntity<Page<UserDoneTasksStatsDto>> topUsersByDoneTasks(
             Pageable pageable
     ) {
-        return analyticsService.getTopAssigneesByDoneTasks(pageable);
+        return ResponseEntity.ok(analyticsService.getTopAssigneesByDoneTasks(pageable));
     }
 }

@@ -23,18 +23,20 @@ public class UserController {
             @RequestParam(required = false) UserRole role,
             Pageable pageable
     ) {
-        return userService.getUsersFiltered(role, pageable);
+        return ResponseEntity.ok(userService.getUsersFiltered(role, pageable));
     }
 
     @PostMapping
     public ResponseEntity<Void> createUser(
             @Valid @RequestBody UserCreateDto dto
     ) {
-        return userService.createUser(dto);
+        userService.createUser(dto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {
-        return userService.softDeleteUser(id);
+        userService.softDeleteUser(id);
+        return ResponseEntity.ok().build();
     }
 }
