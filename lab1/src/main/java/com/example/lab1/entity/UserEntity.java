@@ -33,6 +33,9 @@ public class UserEntity implements SoftDeletable {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "user_role_enum", nullable = false)
     private UserRole role;

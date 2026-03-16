@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
         where (:role is null or u.role = :role)
     """)
     Page<UserEntity> searchUsersFiltered(UserRole role, Pageable pageable);
+
+    Optional<UserEntity> findByEmail(String username);
 }
