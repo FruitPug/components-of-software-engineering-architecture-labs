@@ -1,15 +1,15 @@
 package com.example.lab1.dto.request;
 
 import com.example.lab1.entity.enums.ProjectStatus;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class ProjectStatusUpdateDto {
 
-    @NotNull
+    @NotBlank
     private Long projectId;
 
-    @NotNull
+    @NotBlank
     private ProjectStatus status;
 }

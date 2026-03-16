@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class LoginRequestDto {
+
     @NotBlank(message="Email is required")
     @Email
     private String email;

@@ -1,17 +1,15 @@
 package com.example.lab1.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class ProjectCreateWithOwnerDto {
 
     @NotBlank
-
     private String name;
 
-    @NotNull
+    @NotBlank
     private Long ownerId;
 
     private String description;
