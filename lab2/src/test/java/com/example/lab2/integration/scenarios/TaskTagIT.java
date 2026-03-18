@@ -1,10 +1,10 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.dto.request.TaskTagCreateDto;
-import com.example.lab2.entity.*;
+import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.repository.*;
+import com.example.lab2.sorting_bin.entity.*;
+import com.example.lab2.sorting_bin.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

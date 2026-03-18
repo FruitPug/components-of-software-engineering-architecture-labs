@@ -2,8 +2,8 @@ package com.example.lab2.integration.repository;
 
 import com.example.lab2.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.entity.UserEntity;
-import com.example.lab2.repository.UserRepository;
+import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.sorting_bin.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

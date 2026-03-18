@@ -1,9 +1,9 @@
 package com.example.lab2.unit.mapper;
 
-import com.example.lab2.dto.request.ProjectCreateDto;
-import com.example.lab2.entity.ProjectEntity;
-import com.example.lab2.entity.enums.ProjectStatus;
-import com.example.lab2.mapper.ProjectMapper;
+import com.example.lab2.sorting_bin.dto.request.ProjectCreateDto;
+import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
+import com.example.lab2.sorting_bin.mapper.ProjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

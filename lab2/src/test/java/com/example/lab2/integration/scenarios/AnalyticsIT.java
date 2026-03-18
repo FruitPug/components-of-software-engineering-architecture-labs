@@ -1,12 +1,15 @@
 package com.example.lab2.integration.scenarios;
 
-import com.example.lab2.entity.ProjectEntity;
-import com.example.lab2.entity.TaskEntity;
-import com.example.lab2.entity.UserEntity;
-import com.example.lab2.entity.enums.*;
-import com.example.lab2.repository.ProjectRepository;
-import com.example.lab2.repository.TaskRepository;
-import com.example.lab2.repository.UserRepository;
+import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
+import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
+import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.sorting_bin.repository.ProjectRepository;
+import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.sorting_bin.repository.UserRepository;
 import com.example.lab2.integration.IntegrationTestBase;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;

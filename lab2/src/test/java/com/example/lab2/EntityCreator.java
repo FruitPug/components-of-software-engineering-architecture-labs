@@ -1,7 +1,7 @@
 package com.example.lab2;
 
-import com.example.lab2.entity.*;
-import com.example.lab2.entity.enums.*;
+import com.example.lab2.sorting_bin.entity.*;
+import com.example.lab2.sorting_bin.entity.enums.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

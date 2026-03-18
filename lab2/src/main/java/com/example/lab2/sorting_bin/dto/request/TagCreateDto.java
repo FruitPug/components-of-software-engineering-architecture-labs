@@ -1,0 +1,15 @@
+package com.example.lab2.sorting_bin.dto.request;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class TagCreateDto {
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String color;
+}
+

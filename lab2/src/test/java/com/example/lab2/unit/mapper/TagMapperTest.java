@@ -1,8 +1,8 @@
 package com.example.lab2.unit.mapper;
 
-import com.example.lab2.dto.request.TagCreateDto;
-import com.example.lab2.entity.TagEntity;
-import com.example.lab2.mapper.TagMapper;
+import com.example.lab2.sorting_bin.dto.request.TagCreateDto;
+import com.example.lab2.sorting_bin.entity.TagEntity;
+import com.example.lab2.sorting_bin.mapper.TagMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

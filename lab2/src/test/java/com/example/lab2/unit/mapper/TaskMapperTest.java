@@ -1,12 +1,12 @@
 package com.example.lab2.unit.mapper;
 
-import com.example.lab2.dto.request.TaskCreateDto;
-import com.example.lab2.entity.ProjectEntity;
-import com.example.lab2.entity.TaskEntity;
-import com.example.lab2.entity.UserEntity;
-import com.example.lab2.entity.enums.TaskPriority;
-import com.example.lab2.entity.enums.TaskStatus;
-import com.example.lab2.mapper.TaskMapper;
+import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
+import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
+import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.sorting_bin.mapper.TaskMapper;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

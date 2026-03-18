@@ -1,9 +1,9 @@
 package com.example.lab2.unit.mapper;
 
-import com.example.lab2.dto.request.UserCreateDto;
-import com.example.lab2.entity.UserEntity;
-import com.example.lab2.entity.enums.UserRole;
-import com.example.lab2.mapper.UserMapper;
+import com.example.lab2.sorting_bin.dto.request.UserCreateDto;
+import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.sorting_bin.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

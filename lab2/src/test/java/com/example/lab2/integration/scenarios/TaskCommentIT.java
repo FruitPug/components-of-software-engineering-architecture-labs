@@ -1,16 +1,16 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.dto.request.TaskCommentCreateDto;
-import com.example.lab2.entity.ProjectEntity;
-import com.example.lab2.entity.TaskCommentEntity;
-import com.example.lab2.entity.TaskEntity;
-import com.example.lab2.entity.UserEntity;
+import com.example.lab2.sorting_bin.dto.request.TaskCommentCreateDto;
+import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
+import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.sorting_bin.entity.UserEntity;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.repository.ProjectRepository;
-import com.example.lab2.repository.TaskCommentRepository;
-import com.example.lab2.repository.TaskRepository;
-import com.example.lab2.repository.UserRepository;
+import com.example.lab2.sorting_bin.repository.ProjectRepository;
+import com.example.lab2.sorting_bin.repository.TaskCommentRepository;
+import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.sorting_bin.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

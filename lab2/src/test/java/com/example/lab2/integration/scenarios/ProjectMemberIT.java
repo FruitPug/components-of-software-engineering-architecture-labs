@@ -1,15 +1,15 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.dto.request.ProjectMemberCreateDto;
-import com.example.lab2.entity.ProjectEntity;
-import com.example.lab2.entity.ProjectMemberEntity;
-import com.example.lab2.entity.UserEntity;
-import com.example.lab2.entity.enums.ProjectMemberRole;
+import com.example.lab2.sorting_bin.dto.request.ProjectMemberCreateDto;
+import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
+import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.repository.ProjectMemberRepository;
-import com.example.lab2.repository.ProjectRepository;
-import com.example.lab2.repository.UserRepository;
+import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
+import com.example.lab2.sorting_bin.repository.ProjectRepository;
+import com.example.lab2.sorting_bin.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
