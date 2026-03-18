@@ -41,6 +41,7 @@ class UserCreateDtoValidationTest {
         dto.setEmail("user@test.com");
         dto.setFullName("Test User");
         dto.setRole(UserRole.DEVELOPER);
+        dto.setPassword("password");
 
         Set<ConstraintViolation<UserCreateDto>> violations = validator.validate(dto);
 

@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class ProjectMemberIT extends IntegrationTestBase {
 
     @Autowired private MockMvc mockMvc;
@@ -84,8 +84,8 @@ public class ProjectMemberIT extends IntegrationTestBase {
         dto.setRole(ProjectMemberRole.CONTRIBUTOR);
 
         mockMvc.perform(post("/project-members")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().is4xxClientError());
     }
 

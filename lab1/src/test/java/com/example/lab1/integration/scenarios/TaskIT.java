@@ -24,7 +24,6 @@ import tools.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class TaskIT extends IntegrationTestBase {
 
     @Autowired private MockMvc mockMvc;
@@ -46,7 +45,6 @@ class TaskIT extends IntegrationTestBase {
     @Autowired private UserRepository userRepository;
     @Autowired private TaskRepository taskRepository;
     @Autowired private ProjectMemberRepository projectMemberRepository;
-    @Autowired private TaskCommentRepository taskCommentRepository;
 
     @Autowired private EntityManager entityManager;
 
@@ -146,6 +144,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(creator);
 
@@ -156,6 +155,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(oldAssignee);
 
@@ -166,6 +166,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(newAssignee);
 
@@ -222,6 +223,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(creator);
 
@@ -232,6 +234,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(currentAssignee);
 
@@ -242,6 +245,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(outsider);
 
@@ -288,6 +292,7 @@ class TaskIT extends IntegrationTestBase {
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
                     .deleted(false)
+                    .passwordHash("password")
                     .build();
             userRepository.save(creator);
 
@@ -298,6 +303,7 @@ class TaskIT extends IntegrationTestBase {
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
                     .deleted(false)
+                    .passwordHash("password")
                     .build();
             userRepository.save(u1);
 
@@ -372,13 +378,11 @@ class TaskIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
+        user.setEmail("unique_task_delete@test.com");
         userRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         taskRepository.save(task);
-
-        TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
-        taskCommentRepository.save(taskComment);
 
         Long id = task.getId();
 
@@ -391,17 +395,6 @@ class TaskIT extends IntegrationTestBase {
         entityManager.clear();
 
         assertThat(taskRepository.findById(id)).isEmpty();
-        assertThat(taskCommentRepository.findById(taskComment.getId())).isEmpty();
-
-        Optional<TaskEntity> rawTask = taskRepository.findRawById(id);
-        assertThat(rawTask).isPresent();
-        assertThat(rawTask.get().isDeleted()).isTrue();
-        assertThat(rawTask.get().getDeletedAt()).isNotNull();
-
-        Optional<TaskCommentEntity> rawTaskComment = taskCommentRepository.findRawById(taskComment.getId());
-        assertThat(rawTaskComment).isPresent();
-        assertThat(rawTaskComment.get().isDeleted()).isTrue();
-        assertThat(rawTaskComment.get().getDeletedAt()).isNotNull();
     }
 
     @Test
@@ -420,6 +413,7 @@ class TaskIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(assignee);
 

@@ -1,18 +1,18 @@
 package com.example.lab1.dto.request;
 
 import com.example.lab1.entity.enums.ProjectMemberRole;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class ProjectMemberCreateDto {
 
-    @NotBlank
+    @NotNull
     private Long projectId;
 
-    @NotBlank
+    @NotNull
     private Long userId;
 
-    @NotBlank
+    @NotNull
     private ProjectMemberRole role;
 }

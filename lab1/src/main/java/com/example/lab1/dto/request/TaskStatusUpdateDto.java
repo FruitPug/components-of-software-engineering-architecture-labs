@@ -1,15 +1,15 @@
 package com.example.lab1.dto.request;
 
 import com.example.lab1.entity.enums.TaskStatus;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class TaskStatusUpdateDto {
 
-    @NotBlank
+    @NotNull
     private Long taskId;
 
-    @NotBlank
+    @NotNull
     private TaskStatus status;
 }

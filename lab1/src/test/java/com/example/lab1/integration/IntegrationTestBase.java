@@ -2,6 +2,7 @@ package com.example.lab1.integration;
 
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -12,6 +13,7 @@ import java.util.TimeZone;
 @Testcontainers
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@WithMockUser
 public abstract class IntegrationTestBase {
 
     @SuppressWarnings("resource")

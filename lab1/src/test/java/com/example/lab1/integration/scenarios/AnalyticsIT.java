@@ -4,10 +4,10 @@ import com.example.lab1.entity.ProjectEntity;
 import com.example.lab1.entity.TaskEntity;
 import com.example.lab1.entity.UserEntity;
 import com.example.lab1.entity.enums.*;
-import com.example.lab1.integration.IntegrationTestBase;
 import com.example.lab1.repository.ProjectRepository;
 import com.example.lab1.repository.TaskRepository;
 import com.example.lab1.repository.UserRepository;
+import com.example.lab1.integration.IntegrationTestBase;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class AnalyticsIT extends IntegrationTestBase {
 
     @Autowired private MockMvc mockMvc;
@@ -64,6 +64,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(creator);
 
@@ -151,6 +152,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(creator);
 
@@ -161,6 +163,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(u1);
 
@@ -171,6 +174,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(u2);
 

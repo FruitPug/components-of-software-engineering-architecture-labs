@@ -12,3 +12,4 @@ public class TagCreateDto {
     @NotBlank
     private String color;
 }
+

@@ -27,6 +27,7 @@ public class EntityCreator {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
     }
 

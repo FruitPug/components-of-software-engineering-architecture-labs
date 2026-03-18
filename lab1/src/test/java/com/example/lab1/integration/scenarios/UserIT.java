@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class UserIT extends IntegrationTestBase {
 
     @Autowired private MockMvc mockMvc;
@@ -35,14 +36,16 @@ public class UserIT extends IntegrationTestBase {
 
     @Autowired private UserRepository userRepository;
     @Autowired private EntityManager entityManager;
+    @Autowired private JdbcTemplate jdbcTemplate;
 
     @Test
     @Transactional
     void createUser() throws Exception {
         UserCreateDto dto = new UserCreateDto();
-        dto.setEmail("user@test.com");
+        dto.setEmail("new_user_create@test.com");
         dto.setFullName("Test Tester");
         dto.setRole(UserRole.DEVELOPER);
+        dto.setPassword("password");
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -52,17 +55,20 @@ public class UserIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(userRepository.findAll()).hasSize(1);
-        UserEntity user = userRepository.findAll().get(0);
-        assertThat(user.getEmail()).isEqualTo(dto.getEmail());
-        assertThat(user.getFullName()).isEqualTo(dto.getFullName());
-        assertThat(user.getRole()).isEqualTo(dto.getRole());
+        Optional<UserEntity> user = userRepository.findAll().stream()
+                .filter(u -> u.getEmail().equals(dto.getEmail()))
+                .findFirst();
+        assertThat(user).isPresent();
+        assertThat(user.get().getEmail()).isEqualTo(dto.getEmail());
+        assertThat(user.get().getFullName()).isEqualTo(dto.getFullName());
+        assertThat(user.get().getRole()).isEqualTo(dto.getRole());
     }
 
     @Test
     @Transactional
     void softDeleteUser_marksDeletedAndFiltersFromFindById() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
+        user.setEmail("user_delete@test.com");
         userRepository.save(user);
 
         Long id = user.getId();
@@ -77,43 +83,54 @@ public class UserIT extends IntegrationTestBase {
 
         assertThat(userRepository.findById(id)).isEmpty();
 
-        Optional<UserEntity> raw = userRepository.findRawById(id);
-        assertThat(raw).isPresent();
-        assertThat(raw.get().isDeleted()).isTrue();
-        assertThat(raw.get().getDeletedAt()).isNotNull();
+        UserEntity raw = jdbcTemplate.queryForObject(
+                "SELECT id, is_deleted, deleted_at FROM users WHERE id = ?",
+                (rs, rowNum) -> UserEntity.builder()
+                        .id(rs.getLong("id"))
+                        .deleted(rs.getBoolean("is_deleted"))
+                        .deletedAt(rs.getTimestamp("deleted_at") != null ? rs.getTimestamp("deleted_at").toLocalDateTime() : null)
+                        .build(),
+                id
+        );
+        assertThat(raw).isNotNull();
+        assertThat(raw.isDeleted()).isTrue();
+        assertThat(raw.getDeletedAt()).isNotNull();
     }
 
     @Test
     @Transactional
     void getUsersFiltered_filtersByRoleAndExcludesSoftDeleted() throws Exception {
         UserEntity user1 = UserEntity.builder()
-                .email("user1@test.com")
+                .email("user1_filtered@test.com")
                 .fullName("Test 1 Tester")
                 .role(UserRole.DEVELOPER)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(user1);
 
         UserEntity user2 = UserEntity.builder()
-                .email("user2@test.com")
+                .email("user2_filtered@test.com")
                 .fullName("Test 2 Tester")
                 .role(UserRole.DEVELOPER)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(true)
                 .deletedAt(LocalDateTime.now())
+                .passwordHash("password")
                 .build();
         userRepository.save(user2);
 
         UserEntity user3 = UserEntity.builder()
-                .email("user3@test.com")
+                .email("user3_filtered@test.com")
                 .fullName("Test 3 Tester")
                 .role(UserRole.MANAGER)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
+                .passwordHash("password")
                 .build();
         userRepository.save(user3);
 

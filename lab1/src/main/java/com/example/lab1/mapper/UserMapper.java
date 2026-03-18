@@ -12,6 +12,7 @@ public class UserMapper {
         return UserEntity.builder()
                 .email(dto.getEmail())
                 .fullName(dto.getFullName())
+                .passwordHash(dto.getPassword())
                 .role(dto.getRole())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
