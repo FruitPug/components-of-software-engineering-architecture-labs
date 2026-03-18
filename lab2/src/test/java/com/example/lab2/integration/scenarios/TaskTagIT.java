@@ -1,6 +1,8 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.entity.*;
@@ -33,7 +35,7 @@ public class TaskTagIT extends IntegrationTestBase {
 
     @Autowired private TaskTagRepository taskTagRepository;
     @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private TaskRepository taskRepository;
     @Autowired private TagRepository tagRepository;
 
@@ -43,7 +45,7 @@ public class TaskTagIT extends IntegrationTestBase {
     @Transactional
     void createTaskTag() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);
@@ -93,7 +95,7 @@ public class TaskTagIT extends IntegrationTestBase {
     @Transactional
     void hardDeleteTaskTag_physicallyRemovesRow() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);
@@ -133,7 +135,7 @@ public class TaskTagIT extends IntegrationTestBase {
     @Transactional
     void getTaskTagsFiltered_filtersByTag() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);

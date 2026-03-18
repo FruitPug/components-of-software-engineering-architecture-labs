@@ -4,12 +4,12 @@ import com.example.lab2.EntityCreator;
 import com.example.lab2.sorting_bin.dto.request.ProjectMemberCreateDto;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
 
     @Autowired private ProjectMemberRepository projectMemberRepository;
     @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private EntityManager entityManager;
 
     @Test
@@ -49,7 +49,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectMemberCreateDto dto = new ProjectMemberCreateDto();
         dto.setProjectId(project.getId());
@@ -76,7 +76,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
     @Transactional
     void createProjectMember_whenProjectMissing() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectMemberCreateDto dto = new ProjectMemberCreateDto();
         dto.setProjectId(999999L);
@@ -96,7 +96,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectMemberEntity member = EntityCreator.getProjectMemberEntity(user, project);
         projectMemberRepository.save(member);
@@ -132,17 +132,17 @@ public class ProjectMemberIT extends IntegrationTestBase {
         UserEntity user1 = EntityCreator.getUserEntity();
         user1.setEmail("user1@test.com");
         user1.setFullName("User 1");
-        userRepository.save(user1);
+        jpaUserRepository.save(user1);
 
         UserEntity user2 = EntityCreator.getUserEntity();
         user2.setEmail("user2@test.com");
         user2.setFullName("User 2");
-        userRepository.save(user2);
+        jpaUserRepository.save(user2);
 
         UserEntity user3 = EntityCreator.getUserEntity();
         user3.setEmail("user3@test.com");
         user3.setFullName("User 3");
-        userRepository.save(user3);
+        jpaUserRepository.save(user3);
 
         ProjectMemberEntity projectMember1 = ProjectMemberEntity.builder()
                 .project(project)

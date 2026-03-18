@@ -4,12 +4,12 @@ import com.example.lab2.sorting_bin.dto.request.ProjectMemberCreateDto;
 import com.example.lab2.sorting_bin.dto.response.ProjectMemberResponseDto;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.sorting_bin.mapper.ProjectMemberMapper;
 import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class ProjectMemberService {
 
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final ProjectMemberRepository projectMemberRepository;
 
     @Transactional
@@ -29,7 +29,7 @@ public class ProjectMemberService {
         ProjectEntity project = projectRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
-        UserEntity user = userRepository.findById(dto.getUserId())
+        UserEntity user = jpaUserRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (projectMemberRepository.findByProjectAndRole(project, ProjectMemberRole.OWNER).isPresent()) {

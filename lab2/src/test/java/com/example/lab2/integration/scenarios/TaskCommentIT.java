@@ -5,12 +5,12 @@ import com.example.lab2.sorting_bin.dto.request.TaskCommentCreateDto;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
 import com.example.lab2.sorting_bin.repository.TaskCommentRepository;
 import com.example.lab2.sorting_bin.repository.TaskRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class TaskCommentIT extends IntegrationTestBase {
 
     @Autowired private TaskCommentRepository taskCommentRepository;
     @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private TaskRepository taskRepository;
 
     @Autowired private EntityManager entityManager;
@@ -49,7 +49,7 @@ public class TaskCommentIT extends IntegrationTestBase {
     @Transactional
     void createTaskComment() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);
@@ -82,7 +82,7 @@ public class TaskCommentIT extends IntegrationTestBase {
     @Transactional
     void createTaskComment_whenTaskMissing() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskCommentCreateDto dto = new TaskCommentCreateDto();
         dto.setTaskId(999999L);
@@ -102,7 +102,7 @@ public class TaskCommentIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         taskRepository.save(task);
@@ -134,7 +134,7 @@ public class TaskCommentIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskEntity task1 = EntityCreator.getTaskEntity(user, project);
         taskRepository.save(task1);

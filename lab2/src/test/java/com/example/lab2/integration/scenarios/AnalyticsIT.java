@@ -2,14 +2,14 @@ package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
 import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
 import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
 import com.example.lab2.sorting_bin.entity.enums.UserRole;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
 import com.example.lab2.sorting_bin.repository.TaskRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.integration.IntegrationTestBase;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -32,7 +32,7 @@ class AnalyticsIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
 
     @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private TaskRepository taskRepository;
     @Autowired private EntityManager entityManager;
 
@@ -69,7 +69,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(creator);
+        jpaUserRepository.save(creator);
 
         taskRepository.save(TaskEntity.builder()
                 .project(project1)
@@ -157,7 +157,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(creator);
+        jpaUserRepository.save(creator);
 
         UserEntity u1 = UserEntity.builder()
                 .email("u1@test.com")
@@ -168,7 +168,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(u1);
+        jpaUserRepository.save(u1);
 
         UserEntity u2 = UserEntity.builder()
                 .email("u2@test.com")
@@ -179,7 +179,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(u2);
+        jpaUserRepository.save(u2);
 
         taskRepository.save(TaskEntity.builder()
                 .project(project)

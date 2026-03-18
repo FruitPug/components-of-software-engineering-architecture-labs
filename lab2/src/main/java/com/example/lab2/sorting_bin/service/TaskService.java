@@ -1,16 +1,16 @@
 package com.example.lab2.sorting_bin.service;
 
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
 import com.example.lab2.sorting_bin.dto.request.TaskReassignDto;
 import com.example.lab2.sorting_bin.dto.request.TaskStatusUpdateDto;
 import com.example.lab2.sorting_bin.dto.response.TaskResponseDto;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
 import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
 import com.example.lab2.sorting_bin.mapper.TaskMapper;
-import com.example.lab2.sorting_bin.repository.*;
 import com.example.lab2.sorting_bin.repository.*;
 import com.example.lab2.sorting_bin.service.helper.SoftDeleteHelper;
 import jakarta.transaction.Transactional;
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 public class TaskService {
 
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final TaskRepository taskRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final TaskCommentRepository taskCommentRepository;
@@ -38,12 +38,12 @@ public class TaskService {
         ProjectEntity project = projectRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
-        UserEntity creator = userRepository.findById(dto.getCreatorUserId())
+        UserEntity creator = jpaUserRepository.findById(dto.getCreatorUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Creator user not found"));
 
         UserEntity assignee = null;
         if (dto.getAssigneeUserId() != null) {
-            assignee = userRepository.findById(dto.getAssigneeUserId())
+            assignee = jpaUserRepository.findById(dto.getAssigneeUserId())
                     .orElseThrow(() -> new IllegalArgumentException("Assignee user not found"));
         }
 
@@ -72,7 +72,7 @@ public class TaskService {
         TaskEntity task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
-        UserEntity newAssignee = userRepository.findById(dto.getNewAssigneeUserId())
+        UserEntity newAssignee = jpaUserRepository.findById(dto.getNewAssigneeUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Assignee user not found"));
 
         Long projectId = task.getProject().getId();

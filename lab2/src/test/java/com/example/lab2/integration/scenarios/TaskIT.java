@@ -8,7 +8,7 @@ import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
 import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
@@ -16,7 +16,7 @@ import com.example.lab2.sorting_bin.entity.enums.UserRole;
 import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
 import com.example.lab2.sorting_bin.repository.TaskRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
@@ -51,7 +51,7 @@ class TaskIT extends IntegrationTestBase {
     @Autowired private ObjectMapper objectMapper;
 
     @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private TaskRepository taskRepository;
     @Autowired private ProjectMemberRepository projectMemberRepository;
 
@@ -67,7 +67,7 @@ class TaskIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskCreateDto dto = new TaskCreateDto();
         dto.setProjectId(project.getId());
@@ -118,7 +118,7 @@ class TaskIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         task.setStatus(TaskStatus.TODO);
@@ -155,7 +155,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(creator);
+        jpaUserRepository.save(creator);
 
         UserEntity oldAssignee = UserEntity.builder()
                 .email("old@test.com")
@@ -166,7 +166,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(oldAssignee);
+        jpaUserRepository.save(oldAssignee);
 
         UserEntity newAssignee = UserEntity.builder()
                 .email("new@test.com")
@@ -177,7 +177,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(newAssignee);
+        jpaUserRepository.save(newAssignee);
 
         projectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
@@ -234,7 +234,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(creator);
+        jpaUserRepository.save(creator);
 
         UserEntity currentAssignee = UserEntity.builder()
                 .email("assignee@test.com")
@@ -245,7 +245,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(currentAssignee);
+        jpaUserRepository.save(currentAssignee);
 
         UserEntity outsider = UserEntity.builder()
                 .email("outsider@test.com")
@@ -256,7 +256,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(outsider);
+        jpaUserRepository.save(outsider);
 
         projectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
@@ -303,7 +303,7 @@ class TaskIT extends IntegrationTestBase {
                     .deleted(false)
                     .passwordHash("password")
                     .build();
-            userRepository.save(creator);
+            jpaUserRepository.save(creator);
 
             UserEntity u1 = UserEntity.builder()
                     .email("u1@test.com")
@@ -314,7 +314,7 @@ class TaskIT extends IntegrationTestBase {
                     .deleted(false)
                     .passwordHash("password")
                     .build();
-            userRepository.save(u1);
+            jpaUserRepository.save(u1);
 
             projectMemberRepository.save(ProjectMemberEntity.builder()
                     .project(project)
@@ -388,7 +388,7 @@ class TaskIT extends IntegrationTestBase {
 
         UserEntity user = EntityCreator.getUserEntity();
         user.setEmail("unique_task_delete@test.com");
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         taskRepository.save(task);
@@ -413,7 +413,7 @@ class TaskIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity creator = EntityCreator.getUserEntity();
-        userRepository.save(creator);
+        jpaUserRepository.save(creator);
 
         UserEntity assignee = UserEntity.builder()
                 .email("assignee@test.com")
@@ -424,7 +424,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(assignee);
+        jpaUserRepository.save(assignee);
 
         TaskEntity task1 = TaskEntity.builder()
                 .project(project)

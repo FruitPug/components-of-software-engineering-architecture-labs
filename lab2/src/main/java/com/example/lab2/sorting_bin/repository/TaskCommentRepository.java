@@ -2,7 +2,7 @@ package com.example.lab2.sorting_bin.repository;
 
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,0 +1,16 @@
+package com.example.lab2.domain.repository;
+
+import com.example.lab2.domain.model.User;
+import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
+
+public interface UserRepository {
+    Optional<User> findById(Long id);
+    Optional<User> findByEmail(String email);
+    Page<User> findByRole(UserRole role, Pageable pageable);
+
+    User save(User user);
+}

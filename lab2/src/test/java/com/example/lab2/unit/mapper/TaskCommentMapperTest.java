@@ -3,7 +3,7 @@ package com.example.lab2.unit.mapper;
 import com.example.lab2.sorting_bin.dto.request.TaskCommentCreateDto;
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.mapper.TaskCommentMapper;
 import org.junit.jupiter.api.Test;
 

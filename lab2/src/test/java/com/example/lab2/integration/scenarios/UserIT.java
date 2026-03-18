@@ -1,11 +1,11 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.sorting_bin.dto.request.UserCreateDto;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.presentation.dto.request.UserCreateDto;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.UserRole;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class UserIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private EntityManager entityManager;
     @Autowired private JdbcTemplate jdbcTemplate;
 
@@ -55,7 +55,7 @@ public class UserIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        Optional<UserEntity> user = userRepository.findAll().stream()
+        Optional<UserEntity> user = jpaUserRepository.findAll().stream()
                 .filter(u -> u.getEmail().equals(dto.getEmail()))
                 .findFirst();
         assertThat(user).isPresent();
@@ -69,11 +69,11 @@ public class UserIT extends IntegrationTestBase {
     void softDeleteUser_marksDeletedAndFiltersFromFindById() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
         user.setEmail("user_delete@test.com");
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         Long id = user.getId();
 
-        assertThat(userRepository.findById(id)).isPresent();
+        assertThat(jpaUserRepository.findById(id)).isPresent();
 
         mockMvc.perform(delete("/users/{id}", id))
                 .andExpect(status().is2xxSuccessful());
@@ -81,7 +81,7 @@ public class UserIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(userRepository.findById(id)).isEmpty();
+        assertThat(jpaUserRepository.findById(id)).isEmpty();
 
         UserEntity raw = jdbcTemplate.queryForObject(
                 "SELECT id, is_deleted, deleted_at FROM users WHERE id = ?",
@@ -109,7 +109,7 @@ public class UserIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(user1);
+        jpaUserRepository.save(user1);
 
         UserEntity user2 = UserEntity.builder()
                 .email("user2_filtered@test.com")
@@ -121,7 +121,7 @@ public class UserIT extends IntegrationTestBase {
                 .deletedAt(LocalDateTime.now())
                 .passwordHash("password")
                 .build();
-        userRepository.save(user2);
+        jpaUserRepository.save(user2);
 
         UserEntity user3 = UserEntity.builder()
                 .email("user3_filtered@test.com")
@@ -132,7 +132,7 @@ public class UserIT extends IntegrationTestBase {
                 .deleted(false)
                 .passwordHash("password")
                 .build();
-        userRepository.save(user3);
+        jpaUserRepository.save(user3);
 
         mockMvc.perform(get("/users")
                         .param("role", "DEVELOPER")

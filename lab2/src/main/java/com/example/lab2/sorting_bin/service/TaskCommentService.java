@@ -4,11 +4,11 @@ import com.example.lab2.sorting_bin.dto.request.TaskCommentCreateDto;
 import com.example.lab2.sorting_bin.dto.response.TaskCommentResponseDto;
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.mapper.TaskCommentMapper;
 import com.example.lab2.sorting_bin.repository.TaskCommentRepository;
 import com.example.lab2.sorting_bin.repository.TaskRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.sorting_bin.service.helper.SoftDeleteHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class TaskCommentService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final TaskCommentRepository taskCommentRepository;
     private final SoftDeleteHelper softDeleteHelper;
 
@@ -30,7 +30,7 @@ public class TaskCommentService {
         TaskEntity task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
-        UserEntity author = userRepository.findById(dto.getAuthorUserId())
+        UserEntity author = jpaUserRepository.findById(dto.getAuthorUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Author user not found"));
 
         TaskCommentEntity comment = TaskCommentMapper.createTaskCommentEntity(task, author, dto);

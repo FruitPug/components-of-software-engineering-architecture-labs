@@ -1,4 +1,4 @@
-package com.example.lab2.sorting_bin.dto.response;
+package com.example.lab2.presentation.dto.response;
 
 import com.example.lab2.sorting_bin.entity.enums.UserRole;
 import lombok.Builder;

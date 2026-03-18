@@ -1,6 +1,8 @@
 package com.example.lab2.integration.repository;
 
 import com.example.lab2.EntityCreator;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.entity.*;
 import com.example.lab2.sorting_bin.repository.*;
@@ -21,7 +23,7 @@ class TaskTagRepositoryIT extends IntegrationTestBase {
     private TaskRepository taskRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -33,7 +35,7 @@ class TaskTagRepositoryIT extends IntegrationTestBase {
     @Transactional
     void findByAuthorAndTask_returnsSavedComment() {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);
@@ -57,7 +59,7 @@ class TaskTagRepositoryIT extends IntegrationTestBase {
     @Transactional
     void findRawById_returnsWithNativeQuery() {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);

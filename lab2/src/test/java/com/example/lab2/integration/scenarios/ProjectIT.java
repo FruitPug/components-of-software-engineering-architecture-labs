@@ -6,14 +6,14 @@ import com.example.lab2.sorting_bin.dto.request.ProjectCreateWithOwnerDto;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
 import com.example.lab2.sorting_bin.repository.TaskRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,7 +40,7 @@ class ProjectIT extends IntegrationTestBase {
     @Autowired private ObjectMapper objectMapper;
 
     @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private ProjectMemberRepository projectMemberRepository;
     @Autowired private TaskRepository taskRepository;
 
@@ -74,7 +74,7 @@ class ProjectIT extends IntegrationTestBase {
     @Transactional
     void createProjectWithOwner() throws Exception {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectCreateWithOwnerDto dto = new ProjectCreateWithOwnerDto();
         dto.setName("Test Project");
@@ -111,7 +111,7 @@ class ProjectIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         taskRepository.save(task);
@@ -147,7 +147,7 @@ class ProjectIT extends IntegrationTestBase {
         projectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         taskRepository.save(task);

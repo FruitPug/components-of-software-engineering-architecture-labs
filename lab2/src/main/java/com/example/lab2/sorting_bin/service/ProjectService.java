@@ -5,7 +5,7 @@ import com.example.lab2.sorting_bin.dto.request.ProjectCreateWithOwnerDto;
 import com.example.lab2.sorting_bin.dto.request.ProjectStatusUpdateDto;
 import com.example.lab2.sorting_bin.dto.response.ProjectResponseDto;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
 import com.example.lab2.sorting_bin.mapper.ProjectMapper;
@@ -14,7 +14,7 @@ import com.example.lab2.sorting_bin.mapper.ProjectMemberMapper;
 import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
 import com.example.lab2.sorting_bin.repository.TaskRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.sorting_bin.service.helper.SoftDeleteHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final SoftDeleteHelper softDeleteHelper;
     private final TaskRepository taskRepository;
@@ -43,7 +43,7 @@ public class ProjectService {
     @Transactional
     public void createProjectWithOwner(ProjectCreateWithOwnerDto projectCreateWithOwnerDto) {
 
-        UserEntity owner = userRepository.findById(projectCreateWithOwnerDto.getOwnerId())
+        UserEntity owner = jpaUserRepository.findById(projectCreateWithOwnerDto.getOwnerId())
                 .orElseThrow(() -> new IllegalArgumentException("Owner user not found"));
 
         ProjectEntity project = ProjectMapper.fromCreateDto(projectCreateWithOwnerDto);

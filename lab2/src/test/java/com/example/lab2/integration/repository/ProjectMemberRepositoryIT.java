@@ -4,11 +4,11 @@ import com.example.lab2.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
 import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
 import com.example.lab2.sorting_bin.repository.ProjectRepository;
-import com.example.lab2.sorting_bin.repository.UserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ class ProjectMemberRepositoryIT extends IntegrationTestBase {
     private ProjectMemberRepository projectMemberRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private JpaUserRepository jpaUserRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -32,7 +32,7 @@ class ProjectMemberRepositoryIT extends IntegrationTestBase {
     @Transactional
     void findByProjectAndUser_returnsSavedRole() {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);
@@ -50,7 +50,7 @@ class ProjectMemberRepositoryIT extends IntegrationTestBase {
     @Transactional
     void findRawById_returnsWithNativeQuery() {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);
@@ -68,7 +68,7 @@ class ProjectMemberRepositoryIT extends IntegrationTestBase {
     @Transactional
     void existsByProject_IdAndUser_Id_returnsTrue() {
         UserEntity user = EntityCreator.getUserEntity();
-        userRepository.save(user);
+        jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
         projectRepository.save(project);

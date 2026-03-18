@@ -1,7 +1,7 @@
 package com.example.lab2.unit.mapper;
 
-import com.example.lab2.sorting_bin.dto.request.UserCreateDto;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.presentation.dto.request.UserCreateDto;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.sorting_bin.entity.enums.UserRole;
 import com.example.lab2.sorting_bin.mapper.UserMapper;
 import org.junit.jupiter.api.Test;

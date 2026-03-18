@@ -1,8 +1,8 @@
 package com.example.lab2.sorting_bin.mapper;
 
-import com.example.lab2.sorting_bin.dto.request.UserCreateDto;
-import com.example.lab2.sorting_bin.dto.response.UserResponseDto;
-import com.example.lab2.sorting_bin.entity.UserEntity;
+import com.example.lab2.presentation.dto.request.UserCreateDto;
+import com.example.lab2.presentation.dto.response.UserResponseDto;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,6 @@ public class UserMapper {
         return UserEntity.builder()
                 .email(dto.getEmail())
                 .fullName(dto.getFullName())
-                .passwordHash(dto.getPassword())
                 .role(dto.getRole())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
