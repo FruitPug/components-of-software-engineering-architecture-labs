@@ -1,4 +1,4 @@
-package com.example.lab2.sorting_bin.entity.enums;
+package com.example.lab2.domain.enums;
 
 public enum TaskStatus {
     TODO,

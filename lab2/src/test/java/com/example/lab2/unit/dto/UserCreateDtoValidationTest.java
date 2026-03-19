@@ -1,7 +1,7 @@
 package com.example.lab2.unit.dto;
 
 import com.example.lab2.presentation.dto.request.UserCreateDto;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

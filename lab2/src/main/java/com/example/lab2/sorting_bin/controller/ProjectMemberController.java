@@ -2,7 +2,7 @@ package com.example.lab2.sorting_bin.controller;
 
 import com.example.lab2.sorting_bin.dto.request.ProjectMemberCreateDto;
 import com.example.lab2.sorting_bin.dto.response.ProjectMemberResponseDto;
-import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
+import com.example.lab2.domain.enums.ProjectMemberRole;
 import com.example.lab2.sorting_bin.service.ProjectMemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

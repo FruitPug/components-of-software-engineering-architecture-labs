@@ -1,8 +1,8 @@
 package com.example.lab2.unit.dto;
 
 import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
-import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskPriority;
+import com.example.lab2.domain.enums.TaskStatus;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

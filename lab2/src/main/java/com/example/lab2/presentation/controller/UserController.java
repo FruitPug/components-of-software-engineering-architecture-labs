@@ -7,7 +7,7 @@ import com.example.lab2.domain.model.User;
 import com.example.lab2.presentation.dto.request.UserCreateDto;
 import com.example.lab2.presentation.dto.response.UserResponseDto;
 import com.example.lab2.presentation.mapper.UserDtoMapper;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

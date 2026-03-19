@@ -1,6 +1,6 @@
 package com.example.lab2.sorting_bin.entity;
 
-import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
+import com.example.lab2.domain.enums.ProjectStatus;
 import com.example.lab2.sorting_bin.entity.interfaces.SoftDeletable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

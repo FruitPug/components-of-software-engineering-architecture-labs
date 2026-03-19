@@ -2,7 +2,7 @@ package com.example.lab2.sorting_bin.repository;
 
 import com.example.lab2.sorting_bin.dto.response.ProjectTaskStatusStatsDto;
 import com.example.lab2.sorting_bin.dto.response.UserDoneTasksStatsDto;
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;

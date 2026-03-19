@@ -2,7 +2,7 @@ package com.example.lab2.application.usecase;
 
 import com.example.lab2.domain.model.User;
 import com.example.lab2.domain.repository.UserRepository;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
 package com.example.lab2.sorting_bin.dto.response;
 
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskStatus;
 import lombok.Builder;
 import lombok.Value;
 

@@ -1,8 +1,8 @@
 package com.example.lab2.sorting_bin.repository;
 
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskPriority;
+import com.example.lab2.domain.enums.TaskStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

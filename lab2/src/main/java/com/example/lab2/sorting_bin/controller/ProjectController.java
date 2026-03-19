@@ -4,7 +4,7 @@ import com.example.lab2.sorting_bin.dto.request.ProjectCreateDto;
 import com.example.lab2.sorting_bin.dto.request.ProjectCreateWithOwnerDto;
 import com.example.lab2.sorting_bin.dto.request.ProjectStatusUpdateDto;
 import com.example.lab2.sorting_bin.dto.response.ProjectResponseDto;
-import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
+import com.example.lab2.domain.enums.ProjectStatus;
 import com.example.lab2.sorting_bin.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

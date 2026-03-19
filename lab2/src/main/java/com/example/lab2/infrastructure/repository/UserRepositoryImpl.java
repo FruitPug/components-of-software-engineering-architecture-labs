@@ -5,7 +5,7 @@ import com.example.lab2.domain.repository.UserRepository;
 import com.example.lab2.infrastructure.mapper.UserMapper;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

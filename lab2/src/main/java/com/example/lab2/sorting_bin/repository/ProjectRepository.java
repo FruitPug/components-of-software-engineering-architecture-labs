@@ -1,7 +1,7 @@
 package com.example.lab2.sorting_bin.repository;
 
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
+import com.example.lab2.domain.enums.ProjectStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

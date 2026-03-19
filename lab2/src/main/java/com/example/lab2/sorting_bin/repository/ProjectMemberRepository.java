@@ -3,7 +3,7 @@ package com.example.lab2.sorting_bin.repository;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
+import com.example.lab2.domain.enums.ProjectMemberRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

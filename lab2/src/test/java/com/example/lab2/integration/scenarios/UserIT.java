@@ -3,7 +3,7 @@ package com.example.lab2.integration.scenarios;
 import com.example.lab2.EntityCreator;
 import com.example.lab2.presentation.dto.request.UserCreateDto;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;

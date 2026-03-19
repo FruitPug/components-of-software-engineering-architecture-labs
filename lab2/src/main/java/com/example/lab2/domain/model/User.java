@@ -1,7 +1,7 @@
 package com.example.lab2.domain.model;
 
 import com.example.lab2.domain.error.DomainError;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 

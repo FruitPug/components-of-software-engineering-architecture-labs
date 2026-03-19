@@ -4,8 +4,8 @@ import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
 import com.example.lab2.sorting_bin.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskPriority;
+import com.example.lab2.domain.enums.TaskStatus;
 import com.example.lab2.sorting_bin.mapper.TaskMapper;
 import org.junit.jupiter.api.Test;
 

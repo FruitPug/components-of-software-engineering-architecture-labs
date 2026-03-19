@@ -1,6 +1,6 @@
 package com.example.lab2.sorting_bin.dto.response;
 
-import com.example.lab2.sorting_bin.entity.enums.ProjectStatus;
+import com.example.lab2.domain.enums.ProjectStatus;
 import lombok.Builder;
 import lombok.Value;
 

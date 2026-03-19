@@ -1,7 +1,7 @@
 package com.example.lab2.sorting_bin.entity;
 
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.entity.enums.ProjectMemberRole;
+import com.example.lab2.domain.enums.ProjectMemberRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,7 +3,7 @@ package com.example.lab2.infrastructure.persistence.entity;
 import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
 import com.example.lab2.sorting_bin.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import com.example.lab2.sorting_bin.entity.interfaces.SoftDeletable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

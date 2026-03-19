@@ -4,7 +4,7 @@ import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.User;
 import com.example.lab2.domain.repository.UserRepository;
 import com.example.lab2.domain.service.PasswordHasher;
-import com.example.lab2.sorting_bin.entity.enums.UserRole;
+import com.example.lab2.domain.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

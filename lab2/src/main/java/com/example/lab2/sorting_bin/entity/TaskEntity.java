@@ -1,8 +1,8 @@
 package com.example.lab2.sorting_bin.entity;
 
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.entity.enums.TaskPriority;
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskPriority;
+import com.example.lab2.domain.enums.TaskStatus;
 import com.example.lab2.sorting_bin.entity.interfaces.SoftDeletable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

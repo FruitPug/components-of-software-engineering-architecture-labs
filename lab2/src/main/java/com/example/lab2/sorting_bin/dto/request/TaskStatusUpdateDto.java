@@ -1,6 +1,6 @@
 package com.example.lab2.sorting_bin.dto.request;
 
-import com.example.lab2.sorting_bin.entity.enums.TaskStatus;
+import com.example.lab2.domain.enums.TaskStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
