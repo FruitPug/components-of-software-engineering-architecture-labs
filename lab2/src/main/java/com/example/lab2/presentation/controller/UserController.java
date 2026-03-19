@@ -1,7 +1,7 @@
 package com.example.lab2.presentation.controller;
 
 import com.example.lab2.application.usecase.CreateUserUseCase;
-import com.example.lab2.application.usecase.GetUsersUseCase;
+import com.example.lab2.application.usecase.GetUsersByRoleUseCase;
 import com.example.lab2.application.usecase.SoftDeleteUserUseCase;
 import com.example.lab2.domain.model.User;
 import com.example.lab2.presentation.dto.request.UserCreateDto;
@@ -22,14 +22,14 @@ public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
     private final SoftDeleteUserUseCase softDeleteUserUseCase;
-    private final GetUsersUseCase getUsersUseCase;
+    private final GetUsersByRoleUseCase getUsersByRoleUseCase;
 
     @GetMapping
     public ResponseEntity<Page<UserResponseDto>> getUsersFiltered(
             @RequestParam(required = false) UserRole role,
             Pageable pageable
     ) {
-        Page<User> users = getUsersUseCase.execute(role, pageable);
+        Page<User> users = getUsersByRoleUseCase.execute(role, pageable);
 
         return ResponseEntity.ok(
                 users.map(UserDtoMapper::toResponseDto)
