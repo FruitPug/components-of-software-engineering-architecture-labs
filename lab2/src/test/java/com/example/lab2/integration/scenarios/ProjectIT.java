@@ -1,18 +1,18 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.sorting_bin.dto.request.ProjectCreateDto;
-import com.example.lab2.sorting_bin.dto.request.ProjectCreateWithOwnerDto;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.presentation.dto.request.ProjectCreateDto;
+import com.example.lab2.presentation.dto.request.ProjectCreateWithOwnerDto;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectMemberEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.domain.enums.ProjectMemberRole;
 import com.example.lab2.domain.enums.ProjectStatus;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
-import com.example.lab2.sorting_bin.repository.ProjectRepository;
-import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectMemberRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -39,10 +39,10 @@ class ProjectIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private ProjectRepository projectRepository;
+    @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
-    @Autowired private ProjectMemberRepository projectMemberRepository;
-    @Autowired private TaskRepository taskRepository;
+    @Autowired private JpaProjectMemberRepository jpaProjectMemberRepository;
+    @Autowired private JpaTaskRepository jpaTaskRepository;
 
     @Autowired private EntityManager entityManager;
 
@@ -61,7 +61,7 @@ class ProjectIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<ProjectEntity> projects = projectRepository.findAll();
+        List<ProjectEntity> projects = jpaProjectRepository.findAll();
         assertThat(projects).hasSize(1);
 
         ProjectEntity project = projects.get(0);
@@ -89,13 +89,13 @@ class ProjectIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<ProjectEntity> projects = projectRepository.findAll();
+        List<ProjectEntity> projects = jpaProjectRepository.findAll();
         assertThat(projects).hasSize(1);
 
         ProjectEntity project = projects.get(0);
 
         Optional<ProjectMemberEntity> memberEntity =
-                projectMemberRepository.findByUserAndProject(user, project);
+                jpaProjectMemberRepository.findByUserAndProject(user, project);
 
         assertThat(memberEntity).isPresent();
         assertThat(project.getName()).isEqualTo(dto.getName());
@@ -108,17 +108,17 @@ class ProjectIT extends IntegrationTestBase {
     @Transactional
     void softDeleteProject_marksDeletedAndFiltersFromFindById() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         Long id = project.getId();
 
-        assertThat(projectRepository.findById(id)).isPresent();
+        assertThat(jpaProjectRepository.findById(id)).isPresent();
 
         mockMvc.perform(delete("/projects/{id}", id))
                 .andExpect(status().is2xxSuccessful());
@@ -126,15 +126,15 @@ class ProjectIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(projectRepository.findById(id)).isEmpty();
-        assertThat(taskRepository.findById(task.getId())).isEmpty();
+        assertThat(jpaProjectRepository.findById(id)).isEmpty();
+        assertThat(jpaTaskRepository.findById(task.getId())).isEmpty();
 
-        Optional<ProjectEntity> rawProject = projectRepository.findRawById(id);
+        Optional<ProjectEntity> rawProject = jpaProjectRepository.findRawById(id);
         assertThat(rawProject).isPresent();
         assertThat(rawProject.get().isDeleted()).isTrue();
         assertThat(rawProject.get().getDeletedAt()).isNotNull();
 
-        Optional<TaskEntity> rawTask = taskRepository.findRawById(task.getId());
+        Optional<TaskEntity> rawTask = jpaTaskRepository.findRawById(task.getId());
         assertThat(rawTask).isPresent();
         assertThat(rawTask.get().isDeleted()).isTrue();
         assertThat(rawTask.get().getDeletedAt()).isNotNull();
@@ -144,20 +144,20 @@ class ProjectIT extends IntegrationTestBase {
     @Transactional
     void hardDeleteProject_physicallyRemovesRow() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         ProjectMemberEntity projectMember = EntityCreator.getProjectMemberEntity(user, project);
-        projectMemberRepository.save(projectMember);
+        jpaProjectMemberRepository.save(projectMember);
 
         Long id = project.getId();
 
-        assertThat(projectRepository.findRawById(id)).isPresent();
+        assertThat(jpaProjectRepository.findRawById(id)).isPresent();
 
         mockMvc.perform(delete("/projects/{id}/hard", id))
                 .andExpect(status().is2xxSuccessful());
@@ -165,9 +165,9 @@ class ProjectIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(projectRepository.findRawById(id)).isEmpty();
-        assertThat(projectMemberRepository.findRawById(projectMember.getId())).isEmpty();
-        assertThat(taskRepository.findRawById(task.getId())).isEmpty();
+        assertThat(jpaProjectRepository.findRawById(id)).isEmpty();
+        assertThat(jpaProjectMemberRepository.findRawById(projectMember.getId())).isEmpty();
+        assertThat(jpaTaskRepository.findRawById(task.getId())).isEmpty();
     }
 
     @Test
@@ -190,7 +190,7 @@ class ProjectIT extends IntegrationTestBase {
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        projectRepository.save(project1);
+        jpaProjectRepository.save(project1);
 
         ProjectEntity project2 = ProjectEntity.builder()
                 .name("Test project 2")
@@ -201,7 +201,7 @@ class ProjectIT extends IntegrationTestBase {
                 .deleted(true)
                 .deletedAt(LocalDateTime.now())
                 .build();
-        projectRepository.save(project2);
+        jpaProjectRepository.save(project2);
 
         ProjectEntity project3 = ProjectEntity.builder()
                 .name("Test project 3")
@@ -211,7 +211,7 @@ class ProjectIT extends IntegrationTestBase {
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        projectRepository.save(project3);
+        jpaProjectRepository.save(project3);
 
         entityManager.flush();
         entityManager.clear();

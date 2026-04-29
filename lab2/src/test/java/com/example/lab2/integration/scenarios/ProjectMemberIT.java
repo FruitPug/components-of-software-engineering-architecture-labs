@@ -1,14 +1,14 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.sorting_bin.dto.request.ProjectMemberCreateDto;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
+import com.example.lab2.presentation.dto.request.ProjectMemberCreateDto;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectMemberEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.domain.enums.ProjectMemberRole;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
-import com.example.lab2.sorting_bin.repository.ProjectRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectMemberRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -37,8 +37,8 @@ public class ProjectMemberIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private ProjectMemberRepository projectMemberRepository;
-    @Autowired private ProjectRepository projectRepository;
+    @Autowired private JpaProjectMemberRepository jpaProjectMemberRepository;
+    @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private EntityManager entityManager;
 
@@ -46,7 +46,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
     @Transactional
     void createProjectMember() throws  Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         jpaUserRepository.save(user);
@@ -64,7 +64,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<ProjectMemberEntity> members = projectMemberRepository.findAll();
+        List<ProjectMemberEntity> members = jpaProjectMemberRepository.findAll();
         assertThat(members).hasSize(1);
         ProjectMemberEntity member = members.get(0);
         assertThat(member.getProject().getId()).isEqualTo(project.getId());
@@ -93,17 +93,17 @@ public class ProjectMemberIT extends IntegrationTestBase {
     @Transactional
     void hardDeleteProjectMember_physicallyRemovesRow() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         jpaUserRepository.save(user);
 
         ProjectMemberEntity member = EntityCreator.getProjectMemberEntity(user, project);
-        projectMemberRepository.save(member);
+        jpaProjectMemberRepository.save(member);
 
         Long id = member.getId();
 
-        assertThat(projectMemberRepository.findRawById(id)).isPresent();
+        assertThat(jpaProjectMemberRepository.findRawById(id)).isPresent();
 
         mockMvc.perform(delete("/project-members/{id}/hard", id))
                 .andExpect(status().is2xxSuccessful());
@@ -111,7 +111,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(projectRepository.findRawById(id)).isEmpty();
+        assertThat(jpaProjectRepository.findRawById(id)).isEmpty();
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
     @Transactional
     void getProjectMembersFiltered_filtersByRole() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user1 = EntityCreator.getUserEntity();
         user1.setEmail("user1@test.com");
@@ -150,7 +150,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
                 .role(ProjectMemberRole.CONTRIBUTOR)
                 .joinedAt(LocalDateTime.now())
                 .build();
-        projectMemberRepository.save(projectMember1);
+        jpaProjectMemberRepository.save(projectMember1);
 
         ProjectMemberEntity projectMember2 = ProjectMemberEntity.builder()
                 .project(project)
@@ -158,7 +158,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
                 .role(ProjectMemberRole.OWNER)
                 .joinedAt(LocalDateTime.now())
                 .build();
-        projectMemberRepository.save(projectMember2);
+        jpaProjectMemberRepository.save(projectMember2);
 
         ProjectMemberEntity projectMember3 = ProjectMemberEntity.builder()
                 .project(project)
@@ -166,7 +166,7 @@ public class ProjectMemberIT extends IntegrationTestBase {
                 .role(ProjectMemberRole.MAINTAINER)
                 .joinedAt(LocalDateTime.now())
                 .build();
-        projectMemberRepository.save(projectMember3);
+        jpaProjectMemberRepository.save(projectMember3);
 
         mockMvc.perform(get("/project-members")
                         .param("projectId", project.getId().toString())

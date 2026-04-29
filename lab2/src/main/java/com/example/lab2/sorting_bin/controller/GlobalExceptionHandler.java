@@ -1,5 +1,6 @@
 package com.example.lab2.sorting_bin.controller;
 
+import com.example.lab2.domain.error.DomainError;
 import jakarta.persistence.OptimisticLockException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,22 @@ public class GlobalExceptionHandler {
             String error,
             String message
     ) {}
+
+    @ExceptionHandler(DomainError.class)
+    public ResponseEntity<ApiError> handleDomainError(DomainError ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        if (ex.getMessage().contains("NOT_FOUND")) {
+            status = HttpStatus.NOT_FOUND;
+        }
+
+        ApiError body = new ApiError(
+                Instant.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return ResponseEntity.status(status).body(body);
+    }
 
     @ExceptionHandler({OptimisticLockException.class, ObjectOptimisticLockingFailureException.class})
     public ResponseEntity<ApiError> handleOptimisticLock() {

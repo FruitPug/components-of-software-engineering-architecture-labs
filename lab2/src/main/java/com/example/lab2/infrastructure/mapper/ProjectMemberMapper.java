@@ -1,0 +1,33 @@
+package com.example.lab2.infrastructure.mapper;
+
+import com.example.lab2.domain.model.ProjectMember;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectMemberEntity;
+
+public class ProjectMemberMapper {
+
+    public static ProjectMember toDomain(ProjectMemberEntity e) {
+        return new ProjectMember(
+                e.getId(),
+                e.getProject().getId(),
+                e.getUser().getId(),
+                e.getRole(),
+                e.getJoinedAt()
+        );
+    }
+
+    public static ProjectMemberEntity toEntity(
+            ProjectMember member,
+            ProjectEntity project,
+            UserEntity user
+    ) {
+        return ProjectMemberEntity.builder()
+                .id(member.getId())
+                .project(project)
+                .user(user)
+                .role(member.getRole())
+                .joinedAt(member.getJoinedAt())
+                .build();
+    }
+}

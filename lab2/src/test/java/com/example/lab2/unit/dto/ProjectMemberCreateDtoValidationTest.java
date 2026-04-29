@@ -1,6 +1,6 @@
 package com.example.lab2.unit.dto;
 
-import com.example.lab2.sorting_bin.dto.request.ProjectMemberCreateDto;
+import com.example.lab2.presentation.dto.request.ProjectMemberCreateDto;
 import com.example.lab2.domain.enums.ProjectMemberRole;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

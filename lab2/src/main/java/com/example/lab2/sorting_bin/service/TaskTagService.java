@@ -3,11 +3,11 @@ package com.example.lab2.sorting_bin.service;
 import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
 import com.example.lab2.sorting_bin.dto.response.TaskTagResponseDto;
 import com.example.lab2.sorting_bin.entity.TagEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.sorting_bin.entity.TaskTagEntity;
 import com.example.lab2.sorting_bin.mapper.TaskTagMapper;
 import com.example.lab2.sorting_bin.repository.TagRepository;
-import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.sorting_bin.repository.TaskTagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskTagService {
 
-    private final TaskRepository taskRepository;
+    private final JpaTaskRepository jpaTaskRepository;
     private final TagRepository tagRepository;
     private final TaskTagRepository taskTagRepository;
 
     @Transactional
     public void createTaskTag(TaskTagCreateDto dto) {
 
-        TaskEntity task = taskRepository.findById(dto.getTaskId())
+        TaskEntity task = jpaTaskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
         TagEntity tag = tagRepository.findById(dto.getTagId())

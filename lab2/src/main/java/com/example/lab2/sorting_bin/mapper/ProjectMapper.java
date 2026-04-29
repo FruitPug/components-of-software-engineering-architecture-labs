@@ -1,9 +1,9 @@
 package com.example.lab2.sorting_bin.mapper;
 
-import com.example.lab2.sorting_bin.dto.request.ProjectCreateDto;
-import com.example.lab2.sorting_bin.dto.request.ProjectCreateWithOwnerDto;
-import com.example.lab2.sorting_bin.dto.response.ProjectResponseDto;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.presentation.dto.request.ProjectCreateDto;
+import com.example.lab2.presentation.dto.request.ProjectCreateWithOwnerDto;
+import com.example.lab2.presentation.dto.response.ProjectResponseDto;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
 import com.example.lab2.domain.enums.ProjectStatus;
 
 import java.time.LocalDateTime;

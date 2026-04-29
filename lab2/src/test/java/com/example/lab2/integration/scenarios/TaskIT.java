@@ -1,21 +1,21 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
-import com.example.lab2.sorting_bin.dto.request.TaskReassignDto;
-import com.example.lab2.sorting_bin.dto.request.TaskStatusUpdateDto;
+import com.example.lab2.presentation.dto.request.TaskCreateDto;
+import com.example.lab2.presentation.dto.request.TaskReassignDto;
+import com.example.lab2.presentation.dto.request.TaskStatusUpdateDto;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.ProjectMemberEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectMemberEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.domain.enums.ProjectMemberRole;
 import com.example.lab2.domain.enums.TaskPriority;
 import com.example.lab2.domain.enums.TaskStatus;
 import com.example.lab2.domain.enums.UserRole;
-import com.example.lab2.sorting_bin.repository.ProjectMemberRepository;
-import com.example.lab2.sorting_bin.repository.ProjectRepository;
-import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectMemberRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -50,10 +50,10 @@ class TaskIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private ProjectRepository projectRepository;
+    @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
-    @Autowired private TaskRepository taskRepository;
-    @Autowired private ProjectMemberRepository projectMemberRepository;
+    @Autowired private JpaTaskRepository jpaTaskRepository;
+    @Autowired private JpaProjectMemberRepository jpaProjectMemberRepository;
 
     @Autowired private EntityManager entityManager;
 
@@ -64,7 +64,7 @@ class TaskIT extends IntegrationTestBase {
     @Transactional
     void createTask() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         jpaUserRepository.save(user);
@@ -84,7 +84,7 @@ class TaskIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<TaskEntity> tasks = taskRepository.findAll();
+        List<TaskEntity> tasks = jpaTaskRepository.findAll();
         assertThat(tasks).hasSize(1);
         TaskEntity task = tasks.get(0);
         assertThat(task.getProject().getId()).isEqualTo(project.getId());
@@ -96,7 +96,7 @@ class TaskIT extends IntegrationTestBase {
     @Transactional
     void createTask_whenCreatorIsMissing() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         TaskCreateDto dto = new TaskCreateDto();
         dto.setProjectId(project.getId());
@@ -115,14 +115,14 @@ class TaskIT extends IntegrationTestBase {
     @Transactional
     void updateTaskStatus() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
         task.setStatus(TaskStatus.TODO);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TaskStatusUpdateDto updateDto = new TaskStatusUpdateDto();
         updateDto.setTaskId(task.getId());
@@ -136,7 +136,7 @@ class TaskIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        TaskEntity reloaded = taskRepository.findById(task.getId()).orElseThrow();
+        TaskEntity reloaded = jpaTaskRepository.findById(task.getId()).orElseThrow();
         assertThat(reloaded.getStatus()).isEqualTo(TaskStatus.DONE);
     }
 
@@ -144,7 +144,7 @@ class TaskIT extends IntegrationTestBase {
     @Transactional
     void reassignTask_whenAssigneeIsProjectMember_updatesAssignee() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity creator = UserEntity.builder()
                 .email("creator@test.com")
@@ -179,21 +179,21 @@ class TaskIT extends IntegrationTestBase {
                 .build();
         jpaUserRepository.save(newAssignee);
 
-        projectMemberRepository.save(ProjectMemberEntity.builder()
+        jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
                 .user(creator)
                 .role(ProjectMemberRole.OWNER)
                 .joinedAt(LocalDateTime.now())
                 .build());
 
-        projectMemberRepository.save(ProjectMemberEntity.builder()
+        jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
                 .user(oldAssignee)
                 .role(ProjectMemberRole.CONTRIBUTOR)
                 .joinedAt(LocalDateTime.now())
                 .build());
 
-        projectMemberRepository.save(ProjectMemberEntity.builder()
+        jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
                 .user(newAssignee)
                 .role(ProjectMemberRole.CONTRIBUTOR)
@@ -201,7 +201,7 @@ class TaskIT extends IntegrationTestBase {
                 .build());
 
         TaskEntity task = EntityCreator.getTaskEntity(creator, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TaskReassignDto dto = new TaskReassignDto();
         dto.setTaskId(task.getId());
@@ -215,7 +215,7 @@ class TaskIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        TaskEntity reloaded = taskRepository.findById(task.getId()).orElseThrow();
+        TaskEntity reloaded = jpaTaskRepository.findById(task.getId()).orElseThrow();
         assertThat(reloaded.getAssignee().getId()).isEqualTo(newAssignee.getId());
     }
 
@@ -223,7 +223,7 @@ class TaskIT extends IntegrationTestBase {
     @Transactional
     void reassignTask_whenAssigneeNotProjectMember_throws() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity creator = UserEntity.builder()
                 .email("creator@test.com")
@@ -258,14 +258,14 @@ class TaskIT extends IntegrationTestBase {
                 .build();
         jpaUserRepository.save(outsider);
 
-        projectMemberRepository.save(ProjectMemberEntity.builder()
+        jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
                 .user(creator)
                 .role(ProjectMemberRole.OWNER)
                 .joinedAt(LocalDateTime.now())
                 .build());
 
-        projectMemberRepository.save(ProjectMemberEntity.builder()
+        jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                 .project(project)
                 .user(currentAssignee)
                 .role(ProjectMemberRole.CONTRIBUTOR)
@@ -273,7 +273,7 @@ class TaskIT extends IntegrationTestBase {
                 .build());
 
         TaskEntity task = EntityCreator.getTaskEntity(creator, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TaskReassignDto dto = new TaskReassignDto();
         dto.setTaskId(task.getId());
@@ -292,7 +292,7 @@ class TaskIT extends IntegrationTestBase {
 
         Long taskId = tx.execute(status -> {
             ProjectEntity project = EntityCreator.getProjectEntity();
-            projectRepository.save(project);
+            jpaProjectRepository.save(project);
 
             UserEntity creator = UserEntity.builder()
                     .email("creator@test.com")
@@ -316,14 +316,14 @@ class TaskIT extends IntegrationTestBase {
                     .build();
             jpaUserRepository.save(u1);
 
-            projectMemberRepository.save(ProjectMemberEntity.builder()
+            jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                     .project(project)
                     .user(creator)
                     .role(ProjectMemberRole.OWNER)
                     .joinedAt(LocalDateTime.now())
                     .build());
 
-            projectMemberRepository.save(ProjectMemberEntity.builder()
+            jpaProjectMemberRepository.save(ProjectMemberEntity.builder()
                     .project(project)
                     .user(u1)
                     .role(ProjectMemberRole.CONTRIBUTOR)
@@ -331,7 +331,7 @@ class TaskIT extends IntegrationTestBase {
                     .build());
 
             TaskEntity task = EntityCreator.getTaskEntity(creator, project);
-            taskRepository.save(task);
+            jpaTaskRepository.save(task);
 
             entityManager.flush();
             entityManager.clear();
@@ -340,17 +340,17 @@ class TaskIT extends IntegrationTestBase {
 
         TaskEntity stale = tx.execute(status -> {
             Assertions.assertNotNull(taskId);
-            TaskEntity t = taskRepository.findById(taskId).orElseThrow();
+            TaskEntity t = jpaTaskRepository.findById(taskId).orElseThrow();
             entityManager.detach(t);
             return t;
         });
 
         tx.execute(status -> {
             Assertions.assertNotNull(taskId);
-            TaskEntity fresh = taskRepository.findById(taskId).orElseThrow();
+            TaskEntity fresh = jpaTaskRepository.findById(taskId).orElseThrow();
             fresh.setTitle("Fresh update");
             fresh.setUpdatedAt(LocalDateTime.now());
-            taskRepository.save(fresh);
+            jpaTaskRepository.save(fresh);
             entityManager.flush();
             entityManager.clear();
             return null;
@@ -360,7 +360,7 @@ class TaskIT extends IntegrationTestBase {
             Assertions.assertNotNull(stale);
             stale.setTitle("Stale update");
             stale.setUpdatedAt(LocalDateTime.now());
-            taskRepository.save(stale);
+            jpaTaskRepository.save(stale);
             entityManager.flush();
             return null;
         }))
@@ -384,18 +384,18 @@ class TaskIT extends IntegrationTestBase {
     @Transactional
     void softDeleteTask_marksDeletedAndFiltersFromFindById() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity user = EntityCreator.getUserEntity();
         user.setEmail("unique_task_delete@test.com");
         jpaUserRepository.save(user);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         Long id = task.getId();
 
-        assertThat(taskRepository.findById(id)).isPresent();
+        assertThat(jpaTaskRepository.findById(id)).isPresent();
 
         mockMvc.perform(delete("/tasks/{id}", id))
                 .andExpect(status().is2xxSuccessful());
@@ -403,14 +403,14 @@ class TaskIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(taskRepository.findById(id)).isEmpty();
+        assertThat(jpaTaskRepository.findById(id)).isEmpty();
     }
 
     @Test
     @Transactional
     void getTasksFiltered_filtersByStatusAndPriorityAndExcludesSoftDeleted() throws Exception {
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity creator = EntityCreator.getUserEntity();
         jpaUserRepository.save(creator);
@@ -439,7 +439,7 @@ class TaskIT extends IntegrationTestBase {
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        taskRepository.save(task1);
+        jpaTaskRepository.save(task1);
 
         TaskEntity task2 = TaskEntity.builder()
                 .project(project)
@@ -455,7 +455,7 @@ class TaskIT extends IntegrationTestBase {
                 .deleted(true)
                 .deletedAt(LocalDateTime.now())
                 .build();
-        taskRepository.save(task2);
+        jpaTaskRepository.save(task2);
 
         TaskEntity task3 = TaskEntity.builder()
                 .project(project)
@@ -470,7 +470,7 @@ class TaskIT extends IntegrationTestBase {
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        taskRepository.save(task3);
+        jpaTaskRepository.save(task3);
 
         mockMvc.perform(get("/tasks")
                         .param("status", "TODO")

@@ -1,8 +1,8 @@
 package com.example.lab2.unit.mapper;
 
-import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.presentation.dto.request.TaskCreateDto;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.domain.enums.TaskPriority;
 import com.example.lab2.domain.enums.TaskStatus;

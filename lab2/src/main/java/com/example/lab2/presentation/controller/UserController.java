@@ -1,8 +1,8 @@
 package com.example.lab2.presentation.controller;
 
-import com.example.lab2.application.usecase.CreateUserUseCase;
-import com.example.lab2.application.usecase.GetUsersByRoleUseCase;
-import com.example.lab2.application.usecase.SoftDeleteUserUseCase;
+import com.example.lab2.application.usecase.user.CreateUserUseCase;
+import com.example.lab2.application.usecase.user.GetUsersByRoleUseCase;
+import com.example.lab2.application.usecase.user.SoftDeleteUserUseCase;
 import com.example.lab2.domain.model.User;
 import com.example.lab2.presentation.dto.request.UserCreateDto;
 import com.example.lab2.presentation.dto.response.UserResponseDto;

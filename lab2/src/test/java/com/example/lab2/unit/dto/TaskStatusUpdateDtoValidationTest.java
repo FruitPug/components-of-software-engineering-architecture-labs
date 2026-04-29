@@ -1,6 +1,6 @@
 package com.example.lab2.unit.dto;
 
-import com.example.lab2.sorting_bin.dto.request.TaskStatusUpdateDto;
+import com.example.lab2.presentation.dto.request.TaskStatusUpdateDto;
 import com.example.lab2.domain.enums.TaskStatus;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

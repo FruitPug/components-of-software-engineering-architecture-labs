@@ -1,9 +1,9 @@
 package com.example.lab2.sorting_bin.mapper;
 
-import com.example.lab2.sorting_bin.dto.request.TaskCreateDto;
-import com.example.lab2.sorting_bin.dto.response.TaskResponseDto;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.presentation.dto.request.TaskCreateDto;
+import com.example.lab2.presentation.dto.response.TaskResponseDto;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 
 import java.time.LocalDateTime;

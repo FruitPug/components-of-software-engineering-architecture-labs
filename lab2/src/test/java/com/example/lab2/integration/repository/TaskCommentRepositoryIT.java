@@ -2,13 +2,13 @@ package com.example.lab2.integration.repository;
 
 import com.example.lab2.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.repository.ProjectRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
 import com.example.lab2.sorting_bin.repository.TaskCommentRepository;
-import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -24,13 +24,13 @@ class TaskCommentRepositoryIT extends IntegrationTestBase {
     private TaskCommentRepository taskCommentRepository;
 
     @Autowired
-    private TaskRepository taskRepository;
+    private JpaTaskRepository jpaTaskRepository;
 
     @Autowired
     private JpaUserRepository jpaUserRepository;
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private JpaProjectRepository jpaProjectRepository;
 
     @Test
     @Transactional
@@ -39,10 +39,10 @@ class TaskCommentRepositoryIT extends IntegrationTestBase {
         jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
         taskCommentRepository.save(taskComment);
@@ -60,10 +60,10 @@ class TaskCommentRepositoryIT extends IntegrationTestBase {
         jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
         taskCommentRepository.save(taskComment);

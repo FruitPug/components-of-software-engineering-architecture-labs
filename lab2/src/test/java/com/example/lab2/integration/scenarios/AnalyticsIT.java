@@ -1,14 +1,14 @@
 package com.example.lab2.integration.scenarios;
 
-import com.example.lab2.sorting_bin.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.TaskEntity;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.domain.enums.ProjectStatus;
 import com.example.lab2.domain.enums.TaskPriority;
 import com.example.lab2.domain.enums.TaskStatus;
 import com.example.lab2.domain.enums.UserRole;
-import com.example.lab2.sorting_bin.repository.ProjectRepository;
-import com.example.lab2.sorting_bin.repository.TaskRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.integration.IntegrationTestBase;
 import jakarta.persistence.EntityManager;
@@ -31,9 +31,9 @@ class AnalyticsIT extends IntegrationTestBase {
 
     @Autowired private MockMvc mockMvc;
 
-    @Autowired private ProjectRepository projectRepository;
+    @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
-    @Autowired private TaskRepository taskRepository;
+    @Autowired private JpaTaskRepository jpaTaskRepository;
     @Autowired private EntityManager entityManager;
 
     @Test
@@ -47,7 +47,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        projectRepository.save(project1);
+        jpaProjectRepository.save(project1);
 
         ProjectEntity project2 = ProjectEntity.builder()
                 .name("P2")
@@ -58,7 +58,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(true)
                 .deletedAt(LocalDateTime.now())
                 .build();
-        projectRepository.save(project2);
+        jpaProjectRepository.save(project2);
 
         UserEntity creator = UserEntity.builder()
                 .email("c@test.com")
@@ -71,7 +71,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .build();
         jpaUserRepository.save(creator);
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project1)
                 .creator(creator)
                 .title("t1")
@@ -82,7 +82,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .build());
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project1)
                 .creator(creator)
                 .title("t2")
@@ -94,7 +94,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deletedAt(LocalDateTime.now())
                 .build());
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project1)
                 .creator(creator)
                 .title("t3")
@@ -105,7 +105,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .build());
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project2)
                 .creator(creator)
                 .title("t4")
@@ -146,7 +146,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .updatedAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         UserEntity creator = UserEntity.builder()
                 .email("creator@test.com")
@@ -181,7 +181,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .build();
         jpaUserRepository.save(u2);
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project)
                 .creator(creator)
                 .assignee(u1)
@@ -193,7 +193,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .build());
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project)
                 .creator(creator)
                 .assignee(u1)
@@ -205,7 +205,7 @@ class AnalyticsIT extends IntegrationTestBase {
                 .deleted(false)
                 .build());
 
-        taskRepository.save(TaskEntity.builder()
+        jpaTaskRepository.save(TaskEntity.builder()
                 .project(project)
                 .creator(creator)
                 .assignee(u2)

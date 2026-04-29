@@ -1,8 +1,12 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
+import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
 import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.sorting_bin.entity.*;
@@ -34,9 +38,9 @@ public class TaskTagIT extends IntegrationTestBase {
     @Autowired private ObjectMapper objectMapper;
 
     @Autowired private TaskTagRepository taskTagRepository;
-    @Autowired private ProjectRepository projectRepository;
+    @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
-    @Autowired private TaskRepository taskRepository;
+    @Autowired private JpaTaskRepository jpaTaskRepository;
     @Autowired private TagRepository tagRepository;
 
     @Autowired private EntityManager entityManager;
@@ -48,10 +52,10 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TagEntity tag = EntityCreator.getTagEntity();
         tagRepository.save(tag);
@@ -98,10 +102,10 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TagEntity tag = EntityCreator.getTagEntity();
         tagRepository.save(tag);
@@ -138,10 +142,10 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaUserRepository.save(user);
 
         ProjectEntity project = EntityCreator.getProjectEntity();
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
 
         TaskEntity task = EntityCreator.getTaskEntity(user, project);
-        taskRepository.save(task);
+        jpaTaskRepository.save(task);
 
         TagEntity tag1 = EntityCreator.getTagEntity();
         tag1.setName("tag1");
