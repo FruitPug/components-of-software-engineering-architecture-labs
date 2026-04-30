@@ -1,4 +1,4 @@
-package com.example.lab2.sorting_bin.service;
+package com.example.lab2.infrastructure.security;
 
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;

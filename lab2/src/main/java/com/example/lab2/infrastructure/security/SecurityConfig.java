@@ -1,6 +1,5 @@
-package com.example.lab2.sorting_bin.config;
+package com.example.lab2.infrastructure.security;
 
-import com.example.lab2.sorting_bin.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

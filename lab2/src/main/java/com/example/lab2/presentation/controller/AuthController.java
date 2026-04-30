@@ -1,6 +1,6 @@
-package com.example.lab2.sorting_bin.controller;
+package com.example.lab2.presentation.controller;
 
-import com.example.lab2.sorting_bin.dto.request.LoginRequestDto;
+import com.example.lab2.presentation.dto.request.LoginRequestDto;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
