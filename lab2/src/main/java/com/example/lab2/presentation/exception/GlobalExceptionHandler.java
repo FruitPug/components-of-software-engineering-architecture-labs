@@ -1,4 +1,4 @@
-package com.example.lab2.sorting_bin.controller;
+package com.example.lab2.presentation.exception;
 
 import com.example.lab2.domain.error.DomainError;
 import jakarta.persistence.OptimisticLockException;
