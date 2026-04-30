@@ -1,6 +1,6 @@
 package com.example.lab2.presentation.mapper;
 
-import com.example.lab2.application.usecase.task.CreateTaskCommand;
+import com.example.lab2.application.command.task.CreateTaskCommand;
 import com.example.lab2.domain.model.Task;
 import com.example.lab2.presentation.dto.request.TaskCreateDto;
 import com.example.lab2.presentation.dto.response.TaskResponseDto;

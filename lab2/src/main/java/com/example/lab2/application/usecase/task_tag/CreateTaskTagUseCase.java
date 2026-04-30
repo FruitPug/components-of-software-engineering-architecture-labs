@@ -1,5 +1,6 @@
 package com.example.lab2.application.usecase.task_tag;
 
+import com.example.lab2.application.command.task_tag.CreateTaskTagCommand;
 import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.TaskTag;
 import com.example.lab2.domain.repository.TagRepository;

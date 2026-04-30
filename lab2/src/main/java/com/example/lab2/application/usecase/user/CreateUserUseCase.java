@@ -1,5 +1,6 @@
 package com.example.lab2.application.usecase.user;
 
+import com.example.lab2.application.command.user.CreateUserCommand;
 import com.example.lab2.domain.factory.UserFactory;
 import com.example.lab2.domain.model.User;
 import com.example.lab2.domain.repository.UserRepository;

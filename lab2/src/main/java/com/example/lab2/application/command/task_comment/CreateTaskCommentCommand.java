@@ -1,4 +1,4 @@
-package com.example.lab2.application.usecase.task_comment;
+package com.example.lab2.application.command.task_comment;
 
 public record CreateTaskCommentCommand(
         Long taskId,

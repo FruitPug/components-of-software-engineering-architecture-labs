@@ -1,6 +1,6 @@
 package com.example.lab2.presentation.controller;
 
-import com.example.lab2.application.usecase.task_comment.CreateTaskCommentCommand;
+import com.example.lab2.application.command.task_comment.CreateTaskCommentCommand;
 import com.example.lab2.application.usecase.task_comment.CreateTaskCommentUseCase;
 import com.example.lab2.application.usecase.task_comment.GetTaskCommentsUseCase;
 import com.example.lab2.application.usecase.task_comment.SoftDeleteTaskCommentUseCase;

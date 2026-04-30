@@ -1,4 +1,4 @@
-package com.example.lab2.application.usecase.project_member;
+package com.example.lab2.application.command.project_member;
 
 import com.example.lab2.domain.enums.ProjectMemberRole;
 

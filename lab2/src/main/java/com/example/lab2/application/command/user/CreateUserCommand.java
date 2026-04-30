@@ -1,4 +1,4 @@
-package com.example.lab2.application.usecase.user;
+package com.example.lab2.application.command.user;
 
 import com.example.lab2.domain.enums.UserRole;
 

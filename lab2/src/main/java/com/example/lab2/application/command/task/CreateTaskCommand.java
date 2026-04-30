@@ -1,4 +1,4 @@
-package com.example.lab2.application.usecase.task;
+package com.example.lab2.application.command.task;
 
 import com.example.lab2.domain.enums.TaskPriority;
 

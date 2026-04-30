@@ -1,6 +1,6 @@
 package com.example.lab2.presentation.controller;
 
-import com.example.lab2.application.usecase.project_member.CreateProjectMemberCommand;
+import com.example.lab2.application.command.project_member.CreateProjectMemberCommand;
 import com.example.lab2.application.usecase.project_member.CreateProjectMemberUseCase;
 import com.example.lab2.application.usecase.project_member.GetProjectMembersUseCase;
 import com.example.lab2.application.usecase.project_member.HardDeleteProjectMemberUseCase;

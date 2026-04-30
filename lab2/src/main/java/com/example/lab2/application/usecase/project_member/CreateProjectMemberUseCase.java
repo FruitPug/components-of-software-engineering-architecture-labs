@@ -1,5 +1,6 @@
 package com.example.lab2.application.usecase.project_member;
 
+import com.example.lab2.application.command.project_member.CreateProjectMemberCommand;
 import com.example.lab2.domain.enums.ProjectMemberRole;
 import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.ProjectMember;

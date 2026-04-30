@@ -1,6 +1,6 @@
 package com.example.lab2.presentation.controller;
 
-import com.example.lab2.application.usecase.task_tag.CreateTaskTagCommand;
+import com.example.lab2.application.command.task_tag.CreateTaskTagCommand;
 import com.example.lab2.application.usecase.task_tag.CreateTaskTagUseCase;
 import com.example.lab2.application.usecase.task_tag.GetTaskTagsUseCase;
 import com.example.lab2.application.usecase.task_tag.HardDeleteTaskTagUseCase;
