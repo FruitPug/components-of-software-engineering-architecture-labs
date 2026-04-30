@@ -5,6 +5,7 @@ import com.example.lab2.domain.model.Task;
 import com.example.lab2.domain.repository.ProjectMemberRepository;
 import com.example.lab2.domain.repository.TaskRepository;
 import com.example.lab2.domain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class ReassignTaskUseCase {
     private final UserRepository userRepository;
     private final ProjectMemberRepository memberRepository;
 
+    @Transactional
     public void execute(Long taskId, Long newAssigneeId) {
 
         Task task = taskRepository.findById(taskId)

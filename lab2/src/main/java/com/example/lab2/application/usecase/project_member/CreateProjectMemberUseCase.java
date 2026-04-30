@@ -6,6 +6,7 @@ import com.example.lab2.domain.model.ProjectMember;
 import com.example.lab2.domain.repository.ProjectMemberRepository;
 import com.example.lab2.domain.repository.ProjectRepository;
 import com.example.lab2.domain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class CreateProjectMemberUseCase {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void execute(CreateProjectMemberCommand cmd) {
 
         projectRepository.findById(cmd.projectId())

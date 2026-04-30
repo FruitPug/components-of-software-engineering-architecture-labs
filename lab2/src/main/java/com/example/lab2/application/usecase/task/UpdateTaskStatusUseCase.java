@@ -4,6 +4,7 @@ import com.example.lab2.domain.enums.TaskStatus;
 import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.Task;
 import com.example.lab2.domain.repository.TaskRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class UpdateTaskStatusUseCase {
 
     private final TaskRepository repository;
 
+    @Transactional
     public void execute(Long taskId, TaskStatus status) {
         Task task = repository.findById(taskId)
                 .orElseThrow(() -> new DomainError("TASK_NOT_FOUND"));

@@ -3,6 +3,7 @@ package com.example.lab2.application.usecase.project_member;
 import com.example.lab2.domain.enums.ProjectMemberRole;
 import com.example.lab2.domain.model.ProjectMember;
 import com.example.lab2.domain.repository.ProjectMemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ public class GetProjectMembersUseCase {
 
     private final ProjectMemberRepository repository;
 
+    @Transactional
     public Page<ProjectMember> execute(
             Long projectId,
             Long userId,

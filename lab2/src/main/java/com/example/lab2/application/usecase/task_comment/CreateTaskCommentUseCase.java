@@ -5,6 +5,7 @@ import com.example.lab2.domain.model.TaskComment;
 import com.example.lab2.domain.repository.TaskCommentRepository;
 import com.example.lab2.domain.repository.TaskRepository;
 import com.example.lab2.domain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class CreateTaskCommentUseCase {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void execute(CreateTaskCommentCommand cmd) {
 
         taskRepository.findById(cmd.taskId())

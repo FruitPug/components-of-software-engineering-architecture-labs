@@ -5,6 +5,7 @@ import com.example.lab2.domain.model.TaskTag;
 import com.example.lab2.domain.repository.TagRepository;
 import com.example.lab2.domain.repository.TaskRepository;
 import com.example.lab2.domain.repository.TaskTagRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class CreateTaskTagUseCase {
     private final TaskRepository taskRepository;
     private final TagRepository tagRepository;
 
+    @Transactional
     public void execute(CreateTaskTagCommand cmd) {
 
         taskRepository.findById(cmd.taskId())

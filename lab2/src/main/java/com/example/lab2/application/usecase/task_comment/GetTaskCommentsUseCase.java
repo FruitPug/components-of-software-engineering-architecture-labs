@@ -2,6 +2,7 @@ package com.example.lab2.application.usecase.task_comment;
 
 import com.example.lab2.domain.model.TaskComment;
 import com.example.lab2.domain.repository.TaskCommentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ public class GetTaskCommentsUseCase {
 
     private final TaskCommentRepository repository;
 
+    @Transactional
     public Page<TaskComment> execute(Long taskId, Long userId, Pageable pageable) {
         return repository.search(taskId, userId, pageable);
     }

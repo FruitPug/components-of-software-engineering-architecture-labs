@@ -5,6 +5,7 @@ import com.example.lab2.domain.model.Task;
 import com.example.lab2.domain.repository.ProjectRepository;
 import com.example.lab2.domain.repository.TaskRepository;
 import com.example.lab2.domain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class CreateTaskUseCase {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void execute(CreateTaskCommand cmd) {
 
         projectRepository.findById(cmd.projectId())

@@ -4,6 +4,7 @@ import com.example.lab2.domain.enums.ProjectStatus;
 import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.Project;
 import com.example.lab2.domain.repository.ProjectRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class UpdateProjectStatusUseCase {
 
     private final ProjectRepository repository;
 
+    @Transactional
     public void execute(Long projectId, ProjectStatus status) {
         Project project = repository.findById(projectId)
                 .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));

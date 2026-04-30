@@ -4,6 +4,7 @@ import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.Project;
 import com.example.lab2.domain.repository.ProjectRepository;
 import com.example.lab2.domain.repository.TaskRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class SoftDeleteProjectUseCase {
     private final ProjectRepository repository;
     private final TaskRepository taskRepository;
 
+    @Transactional
     public void execute(Long id) {
         Project project = repository.findById(id)
                 .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));

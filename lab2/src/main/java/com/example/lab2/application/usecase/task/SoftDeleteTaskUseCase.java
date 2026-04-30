@@ -3,6 +3,7 @@ package com.example.lab2.application.usecase.task;
 import com.example.lab2.domain.error.DomainError;
 import com.example.lab2.domain.model.Task;
 import com.example.lab2.domain.repository.TaskRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ public class SoftDeleteTaskUseCase {
 
     private final TaskRepository repository;
 
+    @Transactional
     public void execute(Long id) {
 
         Task task = repository.findById(id)

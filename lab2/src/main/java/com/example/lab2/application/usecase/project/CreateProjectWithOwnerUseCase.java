@@ -8,6 +8,7 @@ import com.example.lab2.domain.model.User;
 import com.example.lab2.domain.repository.ProjectMemberRepository;
 import com.example.lab2.domain.repository.ProjectRepository;
 import com.example.lab2.domain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class CreateProjectWithOwnerUseCase {
     private final ProjectMemberRepository memberRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void execute(CreateProjectWithOwnerCommand cmd) {
 
         User owner = userRepository.findById(cmd.ownerId())
