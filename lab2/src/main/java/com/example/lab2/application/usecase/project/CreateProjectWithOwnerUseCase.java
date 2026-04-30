@@ -37,6 +37,7 @@ public class CreateProjectWithOwnerUseCase {
                 ProjectMemberRole.OWNER
         );
 
-        memberRepository.save(member);
+        ProjectMember savedMember = memberRepository.save(member);
+        member.setId(savedMember.getId());
     }
 }

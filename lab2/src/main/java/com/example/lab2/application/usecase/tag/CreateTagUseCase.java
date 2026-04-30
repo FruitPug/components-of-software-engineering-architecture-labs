@@ -13,6 +13,7 @@ public class CreateTagUseCase {
 
     public void execute(String name, String color) {
         Tag tag = new Tag(name, color);
-        repository.save(tag);
+        Tag savedTag = repository.save(tag);
+        tag.setId(savedTag.getId());
     }
 }

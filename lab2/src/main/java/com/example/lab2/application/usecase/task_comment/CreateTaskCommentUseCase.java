@@ -30,6 +30,7 @@ public class CreateTaskCommentUseCase {
                 cmd.body()
         );
 
-        commentRepository.save(comment);
+        TaskComment savedComment = commentRepository.save(comment);
+        comment.setId(savedComment.getId());
     }
 }

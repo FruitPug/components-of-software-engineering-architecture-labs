@@ -3,12 +3,14 @@ package com.example.lab2.domain.model;
 import com.example.lab2.domain.enums.ProjectStatus;
 import com.example.lab2.domain.error.DomainError;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 public class Project {
 
+    @Setter
     private Long id;
     private final String name;
     private final String description;

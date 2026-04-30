@@ -19,20 +19,17 @@ public class CreateProjectMemberUseCase {
 
     public void execute(CreateProjectMemberCommand cmd) {
 
-        // existence checks
         projectRepository.findById(cmd.projectId())
                 .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));
 
         userRepository.findById(cmd.userId())
                 .orElseThrow(() -> new DomainError("USER_NOT_FOUND"));
 
-        // invariant: only one owner
         if (cmd.role() == ProjectMemberRole.OWNER &&
                 memberRepository.findOwner(cmd.projectId()).isPresent()) {
             throw new DomainError("PROJECT_ALREADY_HAS_OWNER");
         }
 
-        // prevent duplicates
         if (memberRepository.exists(cmd.projectId(), cmd.userId())) {
             throw new DomainError("MEMBER_ALREADY_EXISTS");
         }
@@ -43,6 +40,7 @@ public class CreateProjectMemberUseCase {
                 cmd.role()
         );
 
-        memberRepository.save(member);
+        ProjectMember savedMember = memberRepository.save(member);
+        member.setId(savedMember.getId());
     }
 }

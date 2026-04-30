@@ -13,6 +13,7 @@ public class CreateProjectUseCase {
 
     public void execute(String name, String description) {
         Project project = new Project(name, description);
-        repository.save(project);
+        Project savedProject = repository.save(project);
+        project.setId(savedProject.getId());
     }
 }
