@@ -1,10 +1,7 @@
 package com.example.lab2;
 
 import com.example.lab2.domain.enums.*;
-import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
-import com.example.lab2.infrastructure.persistence.entity.ProjectMemberEntity;
-import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
-import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.entity.*;
 import com.example.lab2.sorting_bin.entity.*;
 
 import java.time.LocalDate;

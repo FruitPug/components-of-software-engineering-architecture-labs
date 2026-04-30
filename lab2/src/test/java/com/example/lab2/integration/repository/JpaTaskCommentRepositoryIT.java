@@ -3,11 +3,11 @@ package com.example.lab2.integration.repository;
 import com.example.lab2.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskCommentEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
-import com.example.lab2.sorting_bin.repository.TaskCommentRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskCommentRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
@@ -18,10 +18,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TaskCommentRepositoryIT extends IntegrationTestBase {
+class JpaTaskCommentRepositoryIT extends IntegrationTestBase {
 
     @Autowired
-    private TaskCommentRepository taskCommentRepository;
+    private JpaTaskCommentRepository jpaTaskCommentRepository;
 
     @Autowired
     private JpaTaskRepository jpaTaskRepository;
@@ -45,9 +45,9 @@ class TaskCommentRepositoryIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
-        taskCommentRepository.save(taskComment);
+        jpaTaskCommentRepository.save(taskComment);
 
-        Optional<TaskCommentEntity> found = taskCommentRepository.findByAuthorAndTask(user, task);
+        Optional<TaskCommentEntity> found = jpaTaskCommentRepository.findByAuthorAndTask(user, task);
 
         assertThat(found).isPresent();
         assertThat(found.get().getId()).isEqualTo(taskComment.getId());
@@ -66,9 +66,9 @@ class TaskCommentRepositoryIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
-        taskCommentRepository.save(taskComment);
+        jpaTaskCommentRepository.save(taskComment);
 
-        Optional<TaskCommentEntity> found = taskCommentRepository.findRawById(taskComment.getId());
+        Optional<TaskCommentEntity> found = jpaTaskCommentRepository.findRawById(taskComment.getId());
 
         assertThat(found).isPresent();
         assertThat(found.get().getId()).isEqualTo(taskComment.getId());

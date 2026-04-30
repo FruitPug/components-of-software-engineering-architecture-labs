@@ -1,6 +1,6 @@
-package com.example.lab2.sorting_bin.repository;
+package com.example.lab2.infrastructure.persistence.repository;
 
-import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskCommentEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
-public interface TaskCommentRepository extends JpaRepository<TaskCommentEntity, Long> {
+public interface JpaTaskCommentRepository extends JpaRepository<TaskCommentEntity, Long> {
 
     Optional<TaskCommentEntity> findByAuthorAndTask(UserEntity author, TaskEntity task);
 

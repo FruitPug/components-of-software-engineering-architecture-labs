@@ -1,8 +1,5 @@
-package com.example.lab2.sorting_bin.entity;
+package com.example.lab2.infrastructure.persistence.entity;
 
-import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
-import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.sorting_bin.entity.interfaces.SoftDeletable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskCommentEntity implements SoftDeletable {
+public class TaskCommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

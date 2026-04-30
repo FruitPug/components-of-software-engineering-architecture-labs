@@ -1,14 +1,14 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.sorting_bin.dto.request.TaskCommentCreateDto;
+import com.example.lab2.presentation.dto.request.TaskCommentCreateDto;
 import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
-import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskCommentEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
-import com.example.lab2.sorting_bin.repository.TaskCommentRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTaskCommentRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import jakarta.persistence.EntityManager;
@@ -38,7 +38,7 @@ public class TaskCommentIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private TaskCommentRepository taskCommentRepository;
+    @Autowired private JpaTaskCommentRepository jpaTaskCommentRepository;
     @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private JpaTaskRepository jpaTaskRepository;
@@ -70,7 +70,7 @@ public class TaskCommentIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<TaskCommentEntity> taskComments = taskCommentRepository.findAll();
+        List<TaskCommentEntity> taskComments = jpaTaskCommentRepository.findAll();
         assertThat(taskComments).hasSize(1);
         TaskCommentEntity taskComment = taskComments.get(0);
         assertThat(taskComment.getTask().getId()).isEqualTo(task.getId());
@@ -108,11 +108,11 @@ public class TaskCommentIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
-        taskCommentRepository.save(taskComment);
+        jpaTaskCommentRepository.save(taskComment);
 
         Long id = taskComment.getId();
 
-        assertThat(taskCommentRepository.findById(id)).isPresent();
+        assertThat(jpaTaskCommentRepository.findById(id)).isPresent();
 
         mockMvc.perform(delete("/task-comments/{id}", id))
                 .andExpect(status().is2xxSuccessful());
@@ -120,9 +120,9 @@ public class TaskCommentIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(taskCommentRepository.findById(id)).isEmpty();
+        assertThat(jpaTaskCommentRepository.findById(id)).isEmpty();
 
-        TaskCommentEntity raw = taskCommentRepository.findRawById(id).orElseThrow();
+        TaskCommentEntity raw = jpaTaskCommentRepository.findRawById(id).orElseThrow();
         assertThat(raw.isDeleted()).isTrue();
         assertThat(raw.getDeletedAt()).isNotNull();
     }
@@ -143,15 +143,15 @@ public class TaskCommentIT extends IntegrationTestBase {
         jpaTaskRepository.save(task2);
 
         TaskCommentEntity taskComment1 = EntityCreator.getTaskCommentEntity(user, task1);
-        taskCommentRepository.save(taskComment1);
+        jpaTaskCommentRepository.save(taskComment1);
 
         TaskCommentEntity taskComment2 = EntityCreator.getTaskCommentEntity(user, task1);
         taskComment2.setDeleted(true);
         taskComment2.setDeletedAt(LocalDateTime.now());
-        taskCommentRepository.save(taskComment2);
+        jpaTaskCommentRepository.save(taskComment2);
 
         TaskCommentEntity taskComment3 = EntityCreator.getTaskCommentEntity(user, task2);
-        taskCommentRepository.save(taskComment3);
+        jpaTaskCommentRepository.save(taskComment3);
 
         mockMvc.perform(get("/task-comments")
                         .param("taskId", task1.getId().toString())
