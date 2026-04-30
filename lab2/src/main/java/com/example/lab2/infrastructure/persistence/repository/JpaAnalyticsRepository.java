@@ -1,7 +1,7 @@
-package com.example.lab2.sorting_bin.repository;
+package com.example.lab2.infrastructure.persistence.repository;
 
-import com.example.lab2.sorting_bin.dto.response.ProjectTaskStatusStatsDto;
-import com.example.lab2.sorting_bin.dto.response.UserDoneTasksStatsDto;
+import com.example.lab2.presentation.dto.response.ProjectTaskStatusStatsDto;
+import com.example.lab2.presentation.dto.response.UserDoneTasksStatsDto;
 import com.example.lab2.domain.enums.TaskStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class AnalyticsRepository {
+public class JpaAnalyticsRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
