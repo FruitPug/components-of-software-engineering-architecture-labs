@@ -1,4 +1,4 @@
-package com.example.lab2;
+package com.example.lab2.integration;
 
 import com.example.lab2.domain.enums.*;
 import com.example.lab2.infrastructure.persistence.entity.*;

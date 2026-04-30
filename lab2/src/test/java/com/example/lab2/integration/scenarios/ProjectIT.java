@@ -1,6 +1,6 @@
 package com.example.lab2.integration.scenarios;
 
-import com.example.lab2.EntityCreator;
+import com.example.lab2.integration.EntityCreator;
 import com.example.lab2.presentation.dto.request.ProjectCreateDto;
 import com.example.lab2.presentation.dto.request.ProjectCreateWithOwnerDto;
 import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;

@@ -1,6 +1,6 @@
 package com.example.lab2.integration.repository;
 
-import com.example.lab2.EntityCreator;
+import com.example.lab2.integration.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;

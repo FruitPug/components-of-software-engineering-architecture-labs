@@ -1,6 +1,6 @@
 package com.example.lab2.integration.scenarios;
 
-import com.example.lab2.EntityCreator;
+import com.example.lab2.integration.EntityCreator;
 import com.example.lab2.presentation.dto.request.TagCreateDto;
 import com.example.lab2.infrastructure.persistence.entity.TagEntity;
 import com.example.lab2.integration.IntegrationTestBase;

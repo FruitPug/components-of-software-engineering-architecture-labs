@@ -1,6 +1,6 @@
 package com.example.lab2.integration.repository;
 
-import com.example.lab2.EntityCreator;
+import com.example.lab2.integration.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
 import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
 import com.example.lab2.infrastructure.persistence.entity.ProjectMemberEntity;

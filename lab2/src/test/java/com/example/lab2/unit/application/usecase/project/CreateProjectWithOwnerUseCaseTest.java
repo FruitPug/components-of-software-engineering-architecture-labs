@@ -1,0 +1,83 @@
+package com.example.lab2.unit.application.usecase.project;
+
+import com.example.lab2.application.command.project.CreateProjectWithOwnerCommand;
+import com.example.lab2.application.usecase.project.CreateProjectWithOwnerUseCase;
+import com.example.lab2.domain.enums.ProjectMemberRole;
+import com.example.lab2.domain.error.DomainError;
+import com.example.lab2.domain.model.Project;
+import com.example.lab2.domain.model.ProjectMember;
+import com.example.lab2.domain.model.User;
+import com.example.lab2.domain.repository.ProjectMemberRepository;
+import com.example.lab2.domain.repository.ProjectRepository;
+import com.example.lab2.domain.repository.UserRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class CreateProjectWithOwnerUseCaseTest {
+
+    @Mock
+    private ProjectRepository projectRepository;
+    @Mock
+    private ProjectMemberRepository memberRepository;
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private CreateProjectWithOwnerUseCase useCase;
+
+    @Test
+    void execute_WhenValid_ShouldCreateProjectAndMember() {
+        CreateProjectWithOwnerCommand cmd = new CreateProjectWithOwnerCommand("P1", "D1", 1L);
+        User owner = mock(User.class);
+        when(owner.getId()).thenReturn(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(owner));
+
+        Project savedProject = mock(Project.class);
+        when(savedProject.getId()).thenReturn(10L);
+        when(projectRepository.save(any(Project.class))).thenReturn(savedProject);
+        when(memberRepository.findOwner(10L)).thenReturn(Optional.empty());
+
+        ProjectMember savedMember = mock(ProjectMember.class);
+        when(savedMember.getId()).thenReturn(100L);
+        when(memberRepository.save(any(ProjectMember.class))).thenReturn(savedMember);
+
+        useCase.execute(cmd);
+
+        verify(projectRepository).save(any(Project.class));
+        verify(memberRepository).save(any(ProjectMember.class));
+    }
+
+    @Test
+    void execute_WhenUserNotFound_ShouldThrowException() {
+        CreateProjectWithOwnerCommand cmd = new CreateProjectWithOwnerCommand("P1", "D1", 1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        assertEquals("USER_NOT_FOUND", exception.getMessage());
+    }
+
+    @Test
+    void execute_WhenProjectAlreadyHasOwner_ShouldThrowException() {
+        CreateProjectWithOwnerCommand cmd = new CreateProjectWithOwnerCommand("P1", "D1", 1L);
+        User owner = mock(User.class);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(owner));
+
+        Project savedProject = mock(Project.class);
+        when(savedProject.getId()).thenReturn(10L);
+        when(projectRepository.save(any(Project.class))).thenReturn(savedProject);
+        when(memberRepository.findOwner(10L)).thenReturn(Optional.of(mock(ProjectMember.class)));
+
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        assertEquals("PROJECT_ALREADY_HAS_OWNER", exception.getMessage());
+    }
+}
