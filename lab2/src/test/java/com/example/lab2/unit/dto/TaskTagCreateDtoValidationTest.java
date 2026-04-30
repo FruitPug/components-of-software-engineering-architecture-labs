@@ -1,6 +1,6 @@
 package com.example.lab2.unit.dto;
 
-import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
+import com.example.lab2.presentation.dto.request.TaskTagCreateDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

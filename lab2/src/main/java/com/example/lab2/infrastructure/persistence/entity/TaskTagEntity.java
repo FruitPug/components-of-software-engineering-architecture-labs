@@ -1,7 +1,5 @@
-package com.example.lab2.sorting_bin.entity;
+package com.example.lab2.infrastructure.persistence.entity;
 
-import com.example.lab2.infrastructure.persistence.entity.TagEntity;
-import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

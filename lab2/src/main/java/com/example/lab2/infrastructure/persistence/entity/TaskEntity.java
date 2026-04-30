@@ -2,7 +2,6 @@ package com.example.lab2.infrastructure.persistence.entity;
 
 import com.example.lab2.domain.enums.TaskPriority;
 import com.example.lab2.domain.enums.TaskStatus;
-import com.example.lab2.sorting_bin.entity.TaskTagEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

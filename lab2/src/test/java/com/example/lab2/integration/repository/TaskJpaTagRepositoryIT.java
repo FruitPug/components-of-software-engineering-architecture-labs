@@ -1,17 +1,9 @@
 package com.example.lab2.integration.repository;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
-import com.example.lab2.infrastructure.persistence.entity.TagEntity;
-import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
-import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
-import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
-import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
-import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
+import com.example.lab2.infrastructure.persistence.entity.*;
+import com.example.lab2.infrastructure.persistence.repository.*;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.entity.*;
-import com.example.lab2.sorting_bin.repository.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TaskJpaTagRepositoryIT extends IntegrationTestBase {
 
     @Autowired
-    private TaskTagRepository taskTagRepository;
+    private JpaTaskTagRepository jpaTaskTagRepository;
 
     @Autowired
     private JpaTaskRepository jpaTaskRepository;
@@ -53,9 +45,9 @@ class TaskJpaTagRepositoryIT extends IntegrationTestBase {
         jpaTagRepository.save(tag);
 
         TaskTagEntity taskTag = EntityCreator.getTaskTagEntity(tag, task);
-        taskTagRepository.save(taskTag);
+        jpaTaskTagRepository.save(taskTag);
 
-        Optional<TaskTagEntity> found = taskTagRepository.findByTaskAndTag(task, tag);
+        Optional<TaskTagEntity> found = jpaTaskTagRepository.findByTaskAndTag(task, tag);
 
         assertThat(found).isPresent();
         assertThat(found.get().getId()).isEqualTo(taskTag.getId());
@@ -77,9 +69,9 @@ class TaskJpaTagRepositoryIT extends IntegrationTestBase {
         jpaTagRepository.save(tag);
 
         TaskTagEntity taskTag = EntityCreator.getTaskTagEntity(tag, task);
-        taskTagRepository.save(taskTag);
+        jpaTaskTagRepository.save(taskTag);
 
-        Optional<TaskTagEntity> found = taskTagRepository.findRawById(taskTag.getId());
+        Optional<TaskTagEntity> found = jpaTaskTagRepository.findRawById(taskTag.getId());
 
         assertThat(found).isPresent();
         assertThat(found.get().getId()).isEqualTo(taskTag.getId());

@@ -1,18 +1,10 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
-import com.example.lab2.infrastructure.persistence.entity.TagEntity;
-import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
-import com.example.lab2.infrastructure.persistence.entity.UserEntity;
-import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
-import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
-import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
-import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
-import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
+import com.example.lab2.infrastructure.persistence.entity.*;
+import com.example.lab2.infrastructure.persistence.repository.*;
+import com.example.lab2.presentation.dto.request.TaskTagCreateDto;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.entity.*;
-import com.example.lab2.sorting_bin.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -39,7 +31,7 @@ public class TaskTagIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private TaskTagRepository taskTagRepository;
+    @Autowired private JpaTaskTagRepository jpaTaskTagRepository;
     @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private JpaTaskRepository jpaTaskRepository;
@@ -74,7 +66,7 @@ public class TaskTagIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<TaskTagEntity> taskTags = taskTagRepository.findAll();
+        List<TaskTagEntity> taskTags = jpaTaskTagRepository.findAll();
         assertThat(taskTags).hasSize(1);
         TaskTagEntity taskTag = taskTags.get(0);
         assertThat(taskTag.getTask().getId()).isEqualTo(task.getId());
@@ -113,11 +105,11 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaTagRepository.save(tag);
 
         TaskTagEntity taskTag = EntityCreator.getTaskTagEntity(tag, task);
-        taskTagRepository.save(taskTag);
+        jpaTaskTagRepository.save(taskTag);
 
         Long id = taskTag.getId();
 
-        assertThat(taskTagRepository.findRawById(id)).isPresent();
+        assertThat(jpaTaskTagRepository.findRawById(id)).isPresent();
 
         mockMvc.perform(delete("/task-tags/{id}/hard", id))
                 .andExpect(status().is2xxSuccessful());
@@ -125,7 +117,7 @@ public class TaskTagIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(taskTagRepository.findRawById(id)).isEmpty();
+        assertThat(jpaTaskTagRepository.findRawById(id)).isEmpty();
     }
 
     @Test
@@ -160,10 +152,10 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaTagRepository.save(tag2);
 
         TaskTagEntity taskTag1 = EntityCreator.getTaskTagEntity(tag1, task);
-        taskTagRepository.save(taskTag1);
+        jpaTaskTagRepository.save(taskTag1);
 
         TaskTagEntity taskTag2 = EntityCreator.getTaskTagEntity(tag2, task);
-        taskTagRepository.save(taskTag2);
+        jpaTaskTagRepository.save(taskTag2);
 
         mockMvc.perform(get("/task-tags")
                         .param("taskId", task.getId().toString())

@@ -1,8 +1,8 @@
-package com.example.lab2.sorting_bin.repository;
+package com.example.lab2.infrastructure.persistence.repository;
 
 import com.example.lab2.infrastructure.persistence.entity.TagEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
-import com.example.lab2.sorting_bin.entity.TaskTagEntity;
+import com.example.lab2.infrastructure.persistence.entity.TaskTagEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TaskTagRepository extends JpaRepository<TaskTagEntity, Long> {
+public interface JpaTaskTagRepository extends JpaRepository<TaskTagEntity, Long> {
 
     Optional<TaskTagEntity> findByTaskAndTag(TaskEntity task, TagEntity tag);
 
@@ -30,4 +30,6 @@ public interface TaskTagRepository extends JpaRepository<TaskTagEntity, Long> {
             and (:tagId is null or tt.tag.id = :tagId)
     """)
     Page<TaskTagEntity> searchTaskTagsFiltered(Long taskId, Long tagId, Pageable pageable);
+
+    boolean existsByTask_IdAndTag_Id(Long taskId, Long tagId);
 }

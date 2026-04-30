@@ -1,4 +1,4 @@
-package com.example.lab2.sorting_bin.dto.response;
+package com.example.lab2.presentation.dto.response;
 
 import lombok.Builder;
 import lombok.Value;
