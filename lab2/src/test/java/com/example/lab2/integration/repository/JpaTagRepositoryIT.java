@@ -2,8 +2,8 @@ package com.example.lab2.integration.repository;
 
 import com.example.lab2.EntityCreator;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.entity.TagEntity;
-import com.example.lab2.sorting_bin.repository.TagRepository;
+import com.example.lab2.infrastructure.persistence.entity.TagEntity;
+import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,18 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TagRepositoryIT extends IntegrationTestBase {
+public class JpaTagRepositoryIT extends IntegrationTestBase {
 
     @Autowired
-    private TagRepository tagRepository;
+    private JpaTagRepository jpaTagRepository;
 
     @Test
     @Transactional
     public void findById_returnsSavedTag(){
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
-        Optional<TagEntity> found = tagRepository.findById(tag.getId());
+        Optional<TagEntity> found = jpaTagRepository.findById(tag.getId());
 
         assertThat(found).isPresent();
         assertThat(found.get().getId()).isEqualTo(tag.getId());
@@ -33,9 +33,9 @@ public class TagRepositoryIT extends IntegrationTestBase {
     @Transactional
     void findRawById_returnsWithNativeQuery() {
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
-        Optional<TagEntity> found = tagRepository.findRawById(tag.getId());
+        Optional<TagEntity> found = jpaTagRepository.findRawById(tag.getId());
 
         assertThat(found).isPresent();
         assertThat(found.get().getId()).isEqualTo(tag.getId());

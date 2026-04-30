@@ -2,8 +2,10 @@ package com.example.lab2.integration.repository;
 
 import com.example.lab2.EntityCreator;
 import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.TagEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
@@ -18,7 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class TaskTagRepositoryIT extends IntegrationTestBase {
+class TaskJpaTagRepositoryIT extends IntegrationTestBase {
 
     @Autowired
     private TaskTagRepository taskTagRepository;
@@ -33,7 +35,7 @@ class TaskTagRepositoryIT extends IntegrationTestBase {
     private JpaProjectRepository jpaProjectRepository;
 
     @Autowired
-    private TagRepository tagRepository;
+    private JpaTagRepository jpaTagRepository;
 
     @Test
     @Transactional
@@ -48,7 +50,7 @@ class TaskTagRepositoryIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
         TaskTagEntity taskTag = EntityCreator.getTaskTagEntity(tag, task);
         taskTagRepository.save(taskTag);
@@ -72,7 +74,7 @@ class TaskTagRepositoryIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
         TaskTagEntity taskTag = EntityCreator.getTaskTagEntity(tag, task);
         taskTagRepository.save(taskTag);

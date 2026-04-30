@@ -1,10 +1,10 @@
 package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
-import com.example.lab2.sorting_bin.dto.request.TagCreateDto;
-import com.example.lab2.sorting_bin.entity.TagEntity;
+import com.example.lab2.presentation.dto.request.TagCreateDto;
+import com.example.lab2.infrastructure.persistence.entity.TagEntity;
 import com.example.lab2.integration.IntegrationTestBase;
-import com.example.lab2.sorting_bin.repository.TagRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ public class TagIT extends IntegrationTestBase {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private TagRepository tagRepository;
+    @Autowired private JpaTagRepository jpaTagRepository;
     @Autowired private EntityManager entityManager;
 
     @Test
@@ -51,7 +51,7 @@ public class TagIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        List<TagEntity> tags = tagRepository.findAll();
+        List<TagEntity> tags = jpaTagRepository.findAll();
         assertThat(tags).hasSize(1);
 
         TagEntity tag = tags.get(0);
@@ -63,11 +63,11 @@ public class TagIT extends IntegrationTestBase {
     @Transactional
     void softDeleteTag_marksDeletedAndFiltersFromFindById() throws Exception {
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
         Long id = tag.getId();
 
-        assertThat(tagRepository.findById(id)).isPresent();
+        assertThat(jpaTagRepository.findById(id)).isPresent();
 
         mockMvc.perform(delete("/tags/{id}", id))
                 .andExpect(status().is2xxSuccessful());
@@ -75,9 +75,9 @@ public class TagIT extends IntegrationTestBase {
         entityManager.flush();
         entityManager.clear();
 
-        assertThat(tagRepository.findById(id)).isEmpty();
+        assertThat(jpaTagRepository.findById(id)).isEmpty();
 
-        Optional<TagEntity> raw = tagRepository.findRawById(id);
+        Optional<TagEntity> raw = jpaTagRepository.findRawById(id);
         assertThat(raw).isPresent();
         assertThat(raw.get().isDeleted()).isTrue();
         assertThat(raw.get().getDeletedAt()).isNotNull();
@@ -92,7 +92,7 @@ public class TagIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        tagRepository.save(tag1);
+        jpaTagRepository.save(tag1);
 
         TagEntity tag2 = TagEntity.builder()
                 .name("Test tag 2")
@@ -101,7 +101,7 @@ public class TagIT extends IntegrationTestBase {
                 .deleted(true)
                 .deletedAt(LocalDateTime.now())
                 .build();
-        tagRepository.save(tag2);
+        jpaTagRepository.save(tag2);
 
         TagEntity tag3 = TagEntity.builder()
                 .name("Test tag 3")
@@ -109,7 +109,7 @@ public class TagIT extends IntegrationTestBase {
                 .createdAt(LocalDateTime.now())
                 .deleted(false)
                 .build();
-        tagRepository.save(tag3);
+        jpaTagRepository.save(tag3);
 
         entityManager.flush();
         entityManager.clear();

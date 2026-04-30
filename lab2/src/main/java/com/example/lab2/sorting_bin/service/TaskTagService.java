@@ -2,11 +2,11 @@ package com.example.lab2.sorting_bin.service;
 
 import com.example.lab2.sorting_bin.dto.request.TaskTagCreateDto;
 import com.example.lab2.sorting_bin.dto.response.TaskTagResponseDto;
-import com.example.lab2.sorting_bin.entity.TagEntity;
+import com.example.lab2.infrastructure.persistence.entity.TagEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.sorting_bin.entity.TaskTagEntity;
 import com.example.lab2.sorting_bin.mapper.TaskTagMapper;
-import com.example.lab2.sorting_bin.repository.TagRepository;
+import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.sorting_bin.repository.TaskTagRepository;
 import jakarta.transaction.Transactional;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class TaskTagService {
 
     private final JpaTaskRepository jpaTaskRepository;
-    private final TagRepository tagRepository;
+    private final JpaTagRepository jpaTagRepository;
     private final TaskTagRepository taskTagRepository;
 
     @Transactional
@@ -29,7 +29,7 @@ public class TaskTagService {
         TaskEntity task = jpaTaskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
-        TagEntity tag = tagRepository.findById(dto.getTagId())
+        TagEntity tag = jpaTagRepository.findById(dto.getTagId())
                 .orElseThrow(() -> new IllegalArgumentException("Tag not found"));
 
         TaskTagEntity taskTag = TaskTagMapper.createTaskTagEntity(task, tag);

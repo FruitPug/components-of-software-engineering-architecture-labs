@@ -2,8 +2,10 @@ package com.example.lab2.integration.scenarios;
 
 import com.example.lab2.EntityCreator;
 import com.example.lab2.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab2.infrastructure.persistence.entity.TagEntity;
 import com.example.lab2.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab2.infrastructure.persistence.entity.UserEntity;
+import com.example.lab2.infrastructure.persistence.repository.JpaTagRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab2.infrastructure.persistence.repository.JpaProjectRepository;
@@ -41,7 +43,7 @@ public class TaskTagIT extends IntegrationTestBase {
     @Autowired private JpaProjectRepository jpaProjectRepository;
     @Autowired private JpaUserRepository jpaUserRepository;
     @Autowired private JpaTaskRepository jpaTaskRepository;
-    @Autowired private TagRepository tagRepository;
+    @Autowired private JpaTagRepository jpaTagRepository;
 
     @Autowired private EntityManager entityManager;
 
@@ -58,7 +60,7 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
         TaskTagCreateDto dto = new TaskTagCreateDto();
         dto.setTaskId(task.getId());
@@ -83,7 +85,7 @@ public class TaskTagIT extends IntegrationTestBase {
     @Transactional
     void createTaskTag_whenTaskIsMissing() throws Exception {
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
         TaskTagCreateDto dto = new TaskTagCreateDto();
         dto.setTaskId(999999L);
@@ -108,7 +110,7 @@ public class TaskTagIT extends IntegrationTestBase {
         jpaTaskRepository.save(task);
 
         TagEntity tag = EntityCreator.getTagEntity();
-        tagRepository.save(tag);
+        jpaTagRepository.save(tag);
 
         TaskTagEntity taskTag = EntityCreator.getTaskTagEntity(tag, task);
         taskTagRepository.save(taskTag);
@@ -150,12 +152,12 @@ public class TaskTagIT extends IntegrationTestBase {
         TagEntity tag1 = EntityCreator.getTagEntity();
         tag1.setName("tag1");
         tag1.setColor("red");
-        tagRepository.save(tag1);
+        jpaTagRepository.save(tag1);
 
         TagEntity tag2 = EntityCreator.getTagEntity();
         tag2.setName("tag2");
         tag2.setColor("blue");
-        tagRepository.save(tag2);
+        jpaTagRepository.save(tag2);
 
         TaskTagEntity taskTag1 = EntityCreator.getTaskTagEntity(tag1, task);
         taskTagRepository.save(taskTag1);

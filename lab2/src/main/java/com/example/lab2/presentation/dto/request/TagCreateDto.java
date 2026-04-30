@@ -1,4 +1,4 @@
-package com.example.lab2.sorting_bin.dto.request;
+package com.example.lab2.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
