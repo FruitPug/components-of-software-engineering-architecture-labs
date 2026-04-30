@@ -1,7 +1,6 @@
 package com.example.lab2.infrastructure.persistence.entity;
 
 import com.example.lab2.domain.enums.ProjectStatus;
-import com.example.lab2.sorting_bin.entity.interfaces.SoftDeletable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +20,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectEntity implements SoftDeletable {
+public class ProjectEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

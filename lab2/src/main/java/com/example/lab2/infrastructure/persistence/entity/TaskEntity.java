@@ -4,7 +4,6 @@ import com.example.lab2.domain.enums.TaskPriority;
 import com.example.lab2.domain.enums.TaskStatus;
 import com.example.lab2.sorting_bin.entity.TaskCommentEntity;
 import com.example.lab2.sorting_bin.entity.TaskTagEntity;
-import com.example.lab2.sorting_bin.entity.interfaces.SoftDeletable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +24,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskEntity implements SoftDeletable {
+public class TaskEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
