@@ -1,0 +1,25 @@
+package com.example.lab3.application.usecase.project;
+
+import com.example.lab3.domain.enums.ProjectStatus;
+import com.example.lab3.domain.error.DomainError;
+import com.example.lab3.domain.model.Project;
+import com.example.lab3.domain.repository.ProjectRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UpdateProjectStatusUseCase {
+
+    private final ProjectRepository repository;
+
+    @Transactional
+    public void execute(Long projectId, ProjectStatus status) {
+        Project project = repository.findById(projectId)
+                .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));
+
+        project.updateStatus(status);
+        repository.save(project);
+    }
+}

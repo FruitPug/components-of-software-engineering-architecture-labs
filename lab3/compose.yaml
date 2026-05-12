@@ -1,0 +1,6 @@
+name: architecture_labs
+
+networks:
+  architecture_network:
+    external: true
+    name: architecture_db_network

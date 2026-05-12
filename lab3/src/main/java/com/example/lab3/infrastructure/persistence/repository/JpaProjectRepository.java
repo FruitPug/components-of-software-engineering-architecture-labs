@@ -1,0 +1,29 @@
+package com.example.lab3.infrastructure.persistence.repository;
+
+import com.example.lab3.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab3.domain.enums.ProjectStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface JpaProjectRepository extends JpaRepository<ProjectEntity, Long> {
+
+    @Query(value = "select * from projects where id = :id", nativeQuery = true)
+    Optional<ProjectEntity> findRawById(Long id);
+
+    @Modifying
+    @Query(value = "delete from projects where id = :id", nativeQuery = true)
+    int hardDeleteById(Long id);
+
+    @Query("""
+        select p from ProjectEntity p
+        where (:status is null or p.status = :status)
+    """)
+    Page<ProjectEntity> searchProjectsFiltered(ProjectStatus status, Pageable pageable);
+}
