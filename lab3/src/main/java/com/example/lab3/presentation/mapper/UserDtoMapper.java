@@ -1,6 +1,7 @@
 package com.example.lab3.presentation.mapper;
 
 import com.example.lab3.application.command.user.CreateUserCommand;
+import com.example.lab3.application.query.user.UserReadModel;
 import com.example.lab3.domain.model.User;
 import com.example.lab3.presentation.dto.request.UserCreateDto;
 import com.example.lab3.presentation.dto.response.UserResponseDto;
@@ -20,6 +21,13 @@ public class UserDtoMapper {
         return UserResponseDto.builder()
                 .fullName(user.getFullName())
                 .role(user.getRole())
+                .build();
+    }
+
+    public static UserResponseDto toResponseDto(UserReadModel user) {
+        return UserResponseDto.builder()
+                .fullName(user.fullName())
+                .role(user.role())
                 .build();
     }
 }

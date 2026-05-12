@@ -1,9 +1,10 @@
 package com.example.lab3.presentation.controller;
 
-import com.example.lab3.application.usecase.user.CreateUserUseCase;
-import com.example.lab3.application.usecase.user.GetUsersByRoleUseCase;
-import com.example.lab3.application.usecase.user.SoftDeleteUserUseCase;
-import com.example.lab3.domain.model.User;
+import com.example.lab3.application.command.user.CreateUserCommandHandler;
+import com.example.lab3.application.command.user.SoftDeleteUserCommand;
+import com.example.lab3.application.query.user.GetUsersByRoleQuery;
+import com.example.lab3.application.query.user.GetUsersByRoleQueryHandler;
+import com.example.lab3.application.command.user.SoftDeleteUserCommandHandler;
 import com.example.lab3.presentation.dto.request.UserCreateDto;
 import com.example.lab3.presentation.dto.response.UserResponseDto;
 import com.example.lab3.presentation.mapper.UserDtoMapper;
@@ -20,33 +21,44 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final CreateUserUseCase createUserUseCase;
-    private final SoftDeleteUserUseCase softDeleteUserUseCase;
-    private final GetUsersByRoleUseCase getUsersByRoleUseCase;
+    private final CreateUserCommandHandler createUserCommandHandler;
+    private final SoftDeleteUserCommandHandler softDeleteUserCommandHandler;
+    private final GetUsersByRoleQueryHandler getUsersByRoleQueryHandler;
 
     @GetMapping
     public ResponseEntity<Page<UserResponseDto>> getUsersFiltered(
             @RequestParam(required = false) UserRole role,
             Pageable pageable
     ) {
-        Page<User> users = getUsersByRoleUseCase.execute(role, pageable);
+        GetUsersByRoleQuery query =
+                new GetUsersByRoleQuery(role, pageable);
 
-        return ResponseEntity.ok(
-                users.map(UserDtoMapper::toResponseDto)
-        );
+        Page<UserResponseDto> response =
+                getUsersByRoleQueryHandler.handle(query)
+                        .map(UserDtoMapper::toResponseDto);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<Void> createUser(
             @Valid @RequestBody UserCreateDto dto
     ) {
-        createUserUseCase.execute(UserDtoMapper.toCommand(dto));
+        createUserCommandHandler.handle(
+                UserDtoMapper.toCommand(dto)
+        );
+
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {
-        softDeleteUserUseCase.execute(id);
+    public ResponseEntity<Void> softDeleteUser(
+            @PathVariable Long id
+    ) {
+        softDeleteUserCommandHandler.handle(
+                new SoftDeleteUserCommand(id)
+        );
+
         return ResponseEntity.ok().build();
     }
 }

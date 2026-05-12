@@ -5,10 +5,7 @@ import com.example.lab3.domain.repository.UserRepository;
 import com.example.lab3.infrastructure.mapper.UserMapper;
 import com.example.lab3.infrastructure.persistence.entity.UserEntity;
 import com.example.lab3.infrastructure.persistence.repository.JpaUserRepository;
-import com.example.lab3.domain.enums.UserRole;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -31,12 +28,6 @@ public class UserRepositoryImpl implements UserRepository {
         UserEntity saved = jpaRepository.save(entity);
 
         return UserMapper.toDomain(saved);
-    }
-
-    @Override
-    public Page<User> findByRole(UserRole role, Pageable pageable) {
-        return jpaRepository.searchUsersFiltered(role, pageable)
-                .map(UserMapper::toDomain);
     }
 
     @Override

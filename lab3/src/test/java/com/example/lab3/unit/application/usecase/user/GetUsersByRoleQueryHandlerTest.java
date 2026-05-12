@@ -1,9 +1,10 @@
 package com.example.lab3.unit.application.usecase.user;
 
-import com.example.lab3.application.usecase.user.GetUsersByRoleUseCase;
+import com.example.lab3.application.query.user.GetUsersByRoleQuery;
+import com.example.lab3.application.query.user.GetUsersByRoleQueryHandler;
+import com.example.lab3.application.query.user.UserReadModel;
+import com.example.lab3.application.query.user.UserReadRepository;
 import com.example.lab3.domain.enums.UserRole;
-import com.example.lab3.domain.model.User;
-import com.example.lab3.domain.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,23 +17,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GetUsersByRoleUseCaseTest {
+class GetUsersByRoleQueryHandlerTest {
 
     @Mock
-    private UserRepository repository;
+    private UserReadRepository repository;
 
     @InjectMocks
-    private GetUsersByRoleUseCase useCase;
+    private GetUsersByRoleQueryHandler queryHandler;
 
     @Test
     @SuppressWarnings("unchecked")
-    void execute_ShouldReturnUsersByRole() {
+    void handle_ShouldReturnUsersByRole() {
         UserRole role = UserRole.DEVELOPER;
         Pageable pageable = mock(Pageable.class);
-        Page<User> expectedPage = mock(Page.class);
+        GetUsersByRoleQuery query = new GetUsersByRoleQuery(role, pageable);
+        Page<UserReadModel> expectedPage = mock(Page.class);
+
         when(repository.findByRole(role, pageable)).thenReturn(expectedPage);
 
-        Page<User> result = useCase.execute(role, pageable);
+        Page<UserReadModel> result = queryHandler.handle(query);
 
         assertEquals(expectedPage, result);
         verify(repository).findByRole(role, pageable);

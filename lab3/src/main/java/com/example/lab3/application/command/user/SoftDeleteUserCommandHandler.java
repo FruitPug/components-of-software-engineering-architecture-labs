@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.user;
+package com.example.lab3.application.command.user;
 
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.User;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SoftDeleteUserUseCase {
+public class SoftDeleteUserCommandHandler {
 
     private final UserRepository repository;
 
     @Transactional
-    public void execute(Long id) {
-        User user = repository.findById(id)
+    public void handle(SoftDeleteUserCommand cmd) {
+        User user = repository.findById(cmd.id())
                 .orElseThrow(() -> new DomainError("USER_NOT_FOUND"));
 
         user.softDelete();
