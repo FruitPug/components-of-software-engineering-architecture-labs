@@ -1,7 +1,8 @@
 package com.example.lab3.presentation.controller;
 
-import com.example.lab3.application.command.project.CreateProjectWithOwnerCommand;
-import com.example.lab3.application.usecase.project.*;
+import com.example.lab3.application.command.project.*;
+import com.example.lab3.application.query.project.GetProjectsQuery;
+import com.example.lab3.application.query.project.GetProjectsQueryHandler;
 import com.example.lab3.presentation.mapper.ProjectDtoMapper;
 import com.example.lab3.presentation.dto.request.ProjectCreateDto;
 import com.example.lab3.presentation.dto.request.ProjectCreateWithOwnerDto;
@@ -19,57 +20,95 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProjectController {
 
-    private final CreateProjectUseCase createProjectUseCase;
-    private final CreateProjectWithOwnerUseCase createProjectWithOwnerUseCase;
-    private final UpdateProjectStatusUseCase updateStatusUseCase;
-    private final SoftDeleteProjectUseCase softDeleteUseCase;
-    private final HardDeleteProjectUseCase hardDeleteUseCase;
-    private final GetProjectsUseCase getProjectsUseCase;
+    private final CreateProjectCommandHandler createProjectCommandHandler;
+    private final CreateProjectWithOwnerCommandHandler createProjectWithOwnerCommandHandler;
+    private final UpdateProjectStatusCommandHandler updateStatusCommandHandler;
+    private final SoftDeleteProjectCommandHandler softDeleteCommandHandler;
+    private final HardDeleteProjectCommandHandler hardDeleteCommandHandler;
+    private final GetProjectsQueryHandler getProjectsQueryHandler;
 
     @GetMapping
     public ResponseEntity<Page<ProjectResponseDto>> getProjectsFiltered(
             @RequestParam(required = false) ProjectStatus status,
             Pageable pageable
     ) {
-        return ResponseEntity.ok(
-                getProjectsUseCase.execute(status, pageable)
-                        .map(ProjectDtoMapper::toResponseDto)
-        );
+
+        GetProjectsQuery query = new GetProjectsQuery(status, pageable);
+
+        Page<ProjectResponseDto> response =
+                getProjectsQueryHandler.handle(query)
+                        .map(ProjectDtoMapper::toResponseDto);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProject(@RequestBody ProjectCreateDto dto) {
-        createProjectUseCase.execute(dto.getName(), dto.getDescription());
+    public ResponseEntity<Void> createProject(
+            @RequestBody ProjectCreateDto dto
+    ) {
+
+        createProjectCommandHandler.handle(
+                new CreateProjectCommand(
+                        dto.getName(),
+                        dto.getDescription()
+                )
+        );
+
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/with-owner")
-    public ResponseEntity<Void> createProjectWithOwner(@RequestBody ProjectCreateWithOwnerDto dto) {
-        createProjectWithOwnerUseCase.execute(
+    public ResponseEntity<Void> createProjectWithOwner(
+            @RequestBody ProjectCreateWithOwnerDto dto
+    ) {
+
+        createProjectWithOwnerCommandHandler.handle(
                 new CreateProjectWithOwnerCommand(
                         dto.getName(),
                         dto.getDescription(),
                         dto.getOwnerId()
                 )
         );
+
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/status")
-    public ResponseEntity<Void> updateProjectStatus(@RequestBody ProjectStatusUpdateDto dto) {
-        updateStatusUseCase.execute(dto.getProjectId(), dto.getStatus());
+    public ResponseEntity<Void> updateProjectStatus(
+            @RequestBody ProjectStatusUpdateDto dto
+    ) {
+
+        updateStatusCommandHandler.handle(
+                new UpdateProjectStatusCommand(
+                        dto.getProjectId(),
+                        dto.getStatus()
+                )
+        );
+
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeleteProject(@PathVariable Long id) {
-        softDeleteUseCase.execute(id);
+    public ResponseEntity<Void> softDeleteProject(
+            @PathVariable Long id
+    ) {
+
+        softDeleteCommandHandler.handle(
+                new SoftDeleteProjectCommand(id)
+        );
+
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}/hard")
-    public ResponseEntity<Void> hardDeleteProject(@PathVariable Long id) {
-        hardDeleteUseCase.execute(id);
+    public ResponseEntity<Void> hardDeleteProject(
+            @PathVariable Long id
+    ) {
+
+        hardDeleteCommandHandler.handle(
+                new HardDeleteProjectCommand(id)
+        );
+
         return ResponseEntity.ok().build();
     }
 }

@@ -1,10 +1,11 @@
 package com.example.lab3.unit.application.usecase.project;
 
-import com.example.lab3.application.usecase.project.UpdateProjectStatusUseCase;
-import com.example.lab3.domain.enums.ProjectStatus;
+import com.example.lab3.application.command.project.SoftDeleteProjectCommand;
+import com.example.lab3.application.command.project.SoftDeleteProjectCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.domain.repository.ProjectRepository;
+import com.example.lab3.domain.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,35 +19,41 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateProjectStatusUseCaseTest {
+class SoftDeleteProjectCommandHandlerTest {
 
     @Mock
     private ProjectRepository repository;
+    @Mock
+    private TaskRepository taskRepository;
 
     @InjectMocks
-    private UpdateProjectStatusUseCase useCase;
+    private SoftDeleteProjectCommandHandler useCase;
 
     @Test
-    void execute_WhenProjectExists_ShouldUpdateStatusAndSave() {
+    void handle_WhenProjectExists_ShouldSoftDeleteProjectAndTasks() {
         Long projectId = 1L;
-        ProjectStatus newStatus = ProjectStatus.ARCHIVED;
         Project project = mock(Project.class);
         when(repository.findById(projectId)).thenReturn(Optional.of(project));
 
-        useCase.execute(projectId, newStatus);
+        SoftDeleteProjectCommand cmd = new SoftDeleteProjectCommand(projectId);
 
-        verify(project).updateStatus(newStatus);
+        useCase.handle(cmd);
+
+        verify(project).softDelete();
         verify(repository).save(project);
+        verify(taskRepository).softDeleteByProjectId(projectId);
     }
 
     @Test
-    void execute_WhenProjectDoesNotExist_ShouldThrowException() {
+    void handle_WhenProjectDoesNotExist_ShouldThrowException() {
         Long projectId = 1L;
-        ProjectStatus newStatus = ProjectStatus.ARCHIVED;
         when(repository.findById(projectId)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(projectId, newStatus));
+        SoftDeleteProjectCommand cmd = new SoftDeleteProjectCommand(projectId);
+
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("PROJECT_NOT_FOUND", exception.getMessage());
         verify(repository, never()).save(any());
+        verify(taskRepository, never()).softDeleteByProjectId(anyLong());
     }
 }

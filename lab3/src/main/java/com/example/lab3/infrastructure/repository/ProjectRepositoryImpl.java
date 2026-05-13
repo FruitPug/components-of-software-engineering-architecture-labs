@@ -1,14 +1,11 @@
 package com.example.lab3.infrastructure.repository;
 
-import com.example.lab3.domain.enums.ProjectStatus;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.domain.repository.ProjectRepository;
 import com.example.lab3.infrastructure.mapper.ProjectMapper;
 import com.example.lab3.infrastructure.persistence.repository.JpaProjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -30,12 +27,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         return ProjectMapper.toDomain(
                 jpaRepository.save(ProjectMapper.toEntity(project))
         );
-    }
-
-    @Override
-    public Page<Project> search(ProjectStatus status, Pageable pageable) {
-        return jpaRepository.searchProjectsFiltered(status, pageable)
-                .map(ProjectMapper::toDomain);
     }
 
     @Override

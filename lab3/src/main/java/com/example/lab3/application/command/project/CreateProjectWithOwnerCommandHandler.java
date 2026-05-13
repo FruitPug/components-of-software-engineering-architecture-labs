@@ -1,6 +1,5 @@
-package com.example.lab3.application.usecase.project;
+package com.example.lab3.application.command.project;
 
-import com.example.lab3.application.command.project.CreateProjectWithOwnerCommand;
 import com.example.lab3.domain.enums.ProjectMemberRole;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
@@ -15,14 +14,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateProjectWithOwnerUseCase {
+public class CreateProjectWithOwnerCommandHandler {
 
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository memberRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void execute(CreateProjectWithOwnerCommand cmd) {
+    public void handle(CreateProjectWithOwnerCommand cmd) {
 
         User owner = userRepository.findById(cmd.ownerId())
                 .orElseThrow(() -> new DomainError("USER_NOT_FOUND"));

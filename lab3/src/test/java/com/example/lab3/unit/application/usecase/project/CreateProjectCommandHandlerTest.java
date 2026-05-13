@@ -1,6 +1,7 @@
 package com.example.lab3.unit.application.usecase.project;
 
-import com.example.lab3.application.usecase.project.CreateProjectUseCase;
+import com.example.lab3.application.command.project.CreateProjectCommand;
+import com.example.lab3.application.command.project.CreateProjectCommandHandler;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.domain.repository.ProjectRepository;
 import org.junit.jupiter.api.Test;
@@ -14,23 +15,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateProjectUseCaseTest {
+class CreateProjectCommandHandlerTest {
 
     @Mock
     private ProjectRepository repository;
 
     @InjectMocks
-    private CreateProjectUseCase useCase;
+    private CreateProjectCommandHandler useCase;
 
     @Test
-    void execute_ShouldCreateAndSaveProject() {
+    void handle_ShouldCreateAndSaveProject() {
         String name = "New Project";
         String description = "Description";
         Project savedProject = mock(Project.class);
         when(savedProject.getId()).thenReturn(1L);
         when(repository.save(any(Project.class))).thenReturn(savedProject);
 
-        useCase.execute(name, description);
+        CreateProjectCommand cmd = new CreateProjectCommand(name, description);
+
+        useCase.handle(cmd);
 
         ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
         verify(repository).save(projectCaptor.capture());

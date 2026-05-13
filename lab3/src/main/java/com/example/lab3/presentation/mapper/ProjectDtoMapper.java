@@ -1,5 +1,6 @@
 package com.example.lab3.presentation.mapper;
 
+import com.example.lab3.application.query.project.ProjectReadModel;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.presentation.dto.response.ProjectResponseDto;
 
@@ -10,6 +11,14 @@ public class ProjectDtoMapper {
                 .name(project.getName())
                 .description(project.getDescription())
                 .status(project.getStatus())
+                .build();
+    }
+
+    public static ProjectResponseDto toResponseDto(ProjectReadModel project) {
+        return ProjectResponseDto.builder()
+                .name(project.name())
+                .description(project.description())
+                .status(project.status())
                 .build();
     }
 }

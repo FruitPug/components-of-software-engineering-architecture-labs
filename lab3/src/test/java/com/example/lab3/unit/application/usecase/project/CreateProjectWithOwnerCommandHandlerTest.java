@@ -1,7 +1,7 @@
 package com.example.lab3.unit.application.usecase.project;
 
 import com.example.lab3.application.command.project.CreateProjectWithOwnerCommand;
-import com.example.lab3.application.usecase.project.CreateProjectWithOwnerUseCase;
+import com.example.lab3.application.command.project.CreateProjectWithOwnerCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.domain.model.ProjectMember;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateProjectWithOwnerUseCaseTest {
+class CreateProjectWithOwnerCommandHandlerTest {
 
     @Mock
     private ProjectRepository projectRepository;
@@ -32,10 +32,10 @@ class CreateProjectWithOwnerUseCaseTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private CreateProjectWithOwnerUseCase useCase;
+    private CreateProjectWithOwnerCommandHandler useCase;
 
     @Test
-    void execute_WhenValid_ShouldCreateProjectAndMember() {
+    void handle_WhenValid_ShouldCreateProjectAndMember() {
         CreateProjectWithOwnerCommand cmd = new CreateProjectWithOwnerCommand("P1", "D1", 1L);
         User owner = mock(User.class);
         when(owner.getId()).thenReturn(1L);
@@ -50,23 +50,23 @@ class CreateProjectWithOwnerUseCaseTest {
         when(savedMember.getId()).thenReturn(100L);
         when(memberRepository.save(any(ProjectMember.class))).thenReturn(savedMember);
 
-        useCase.execute(cmd);
+        useCase.handle(cmd);
 
         verify(projectRepository).save(any(Project.class));
         verify(memberRepository).save(any(ProjectMember.class));
     }
 
     @Test
-    void execute_WhenUserNotFound_ShouldThrowException() {
+    void handle_WhenUserNotFound_ShouldThrowException() {
         CreateProjectWithOwnerCommand cmd = new CreateProjectWithOwnerCommand("P1", "D1", 1L);
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("USER_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenProjectAlreadyHasOwner_ShouldThrowException() {
+    void handle_WhenProjectAlreadyHasOwner_ShouldThrowException() {
         CreateProjectWithOwnerCommand cmd = new CreateProjectWithOwnerCommand("P1", "D1", 1L);
         User owner = mock(User.class);
         when(userRepository.findById(1L)).thenReturn(Optional.of(owner));
@@ -76,7 +76,7 @@ class CreateProjectWithOwnerUseCaseTest {
         when(projectRepository.save(any(Project.class))).thenReturn(savedProject);
         when(memberRepository.findOwner(10L)).thenReturn(Optional.of(mock(ProjectMember.class)));
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("PROJECT_ALREADY_HAS_OWNER", exception.getMessage());
     }
 }

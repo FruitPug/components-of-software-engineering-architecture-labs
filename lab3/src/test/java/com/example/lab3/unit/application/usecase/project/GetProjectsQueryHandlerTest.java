@@ -1,9 +1,10 @@
 package com.example.lab3.unit.application.usecase.project;
 
-import com.example.lab3.application.usecase.project.GetProjectsUseCase;
+import com.example.lab3.application.query.project.GetProjectsQuery;
+import com.example.lab3.application.query.project.GetProjectsQueryHandler;
+import com.example.lab3.application.query.project.ProjectReadModel;
+import com.example.lab3.application.query.project.ProjectReadRepository;
 import com.example.lab3.domain.enums.ProjectStatus;
-import com.example.lab3.domain.model.Project;
-import com.example.lab3.domain.repository.ProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,23 +17,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GetProjectsUseCaseTest {
+class GetProjectsQueryHandlerTest {
 
     @Mock
-    private ProjectRepository repository;
+    private ProjectReadRepository repository;
 
     @InjectMocks
-    private GetProjectsUseCase useCase;
+    private GetProjectsQueryHandler useCase;
 
     @Test
     @SuppressWarnings("unchecked")
     void execute_ShouldReturnProjectsByStatus() {
         ProjectStatus status = ProjectStatus.ACTIVE;
         Pageable pageable = mock(Pageable.class);
-        Page<Project> expectedPage = mock(Page.class);
+        Page<ProjectReadModel> expectedPage = mock(Page.class);
+
         when(repository.search(status, pageable)).thenReturn(expectedPage);
 
-        Page<Project> result = useCase.execute(status, pageable);
+        GetProjectsQuery query = new GetProjectsQuery(status, pageable);
+
+        Page<ProjectReadModel> result = useCase.handle(query);
 
         assertEquals(expectedPage, result);
         verify(repository).search(status, pageable);

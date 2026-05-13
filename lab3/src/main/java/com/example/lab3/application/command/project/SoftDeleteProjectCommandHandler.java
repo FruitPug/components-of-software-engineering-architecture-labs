@@ -1,25 +1,28 @@
-package com.example.lab3.application.usecase.project;
+package com.example.lab3.application.command.project;
 
-import com.example.lab3.domain.enums.ProjectStatus;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.domain.repository.ProjectRepository;
+import com.example.lab3.domain.repository.TaskRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateProjectStatusUseCase {
+public class SoftDeleteProjectCommandHandler {
 
     private final ProjectRepository repository;
+    private final TaskRepository taskRepository;
 
     @Transactional
-    public void execute(Long projectId, ProjectStatus status) {
-        Project project = repository.findById(projectId)
+    public void handle(SoftDeleteProjectCommand cmd) {
+        Project project = repository.findById(cmd.projectId())
                 .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));
 
-        project.updateStatus(status);
+        project.softDelete();
         repository.save(project);
+
+        taskRepository.softDeleteByProjectId(cmd.projectId());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.project;
+package com.example.lab3.application.command.project;
 
 import com.example.lab3.domain.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class HardDeleteProjectUseCase {
+public class HardDeleteProjectCommandHandler {
 
     private final ProjectRepository repository;
 
     @Transactional
-    public void execute(Long id) {
-        repository.hardDelete(id);
+    public void handle(HardDeleteProjectCommand cmd) {
+        repository.hardDelete(cmd.projectId());
     }
 }
