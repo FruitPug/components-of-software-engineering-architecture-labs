@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.tag;
+package com.example.lab3.application.command.tag;
 
 import com.example.lab3.domain.model.Tag;
 import com.example.lab3.domain.repository.TagRepository;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateTagUseCase {
+public class CreateTagCommandHandler {
 
     private final TagRepository repository;
 
     @Transactional
-    public void execute(String name, String color) {
-        Tag tag = new Tag(name, color);
+    public void handle(CreateTagCommand cmd) {
+        Tag tag = new Tag(cmd.name(), cmd.color());
         Tag savedTag = repository.save(tag);
         tag.setId(savedTag.getId());
     }

@@ -1,8 +1,11 @@
 package com.example.lab3.presentation.controller;
 
-import com.example.lab3.application.usecase.tag.CreateTagUseCase;
-import com.example.lab3.application.usecase.tag.GetTagsUseCase;
-import com.example.lab3.application.usecase.tag.SoftDeleteTagUseCase;
+import com.example.lab3.application.command.tag.CreateTagCommand;
+import com.example.lab3.application.command.tag.CreateTagCommandHandler;
+import com.example.lab3.application.command.tag.SoftDeleteTagCommand;
+import com.example.lab3.application.query.tag.GetTagsQuery;
+import com.example.lab3.application.query.tag.GetTagsQueryHandler;
+import com.example.lab3.application.command.tag.SoftDeleteTagCommandHandler;
 import com.example.lab3.presentation.mapper.TagDtoMapper;
 import com.example.lab3.presentation.dto.request.TagCreateDto;
 import com.example.lab3.presentation.dto.response.TagResponseDto;
@@ -17,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TagController {
 
-    private final CreateTagUseCase createUseCase;
-    private final SoftDeleteTagUseCase deleteUseCase;
-    private final GetTagsUseCase getUseCase;
+    private final CreateTagCommandHandler createUseCase;
+    private final SoftDeleteTagCommandHandler deleteUseCase;
+    private final GetTagsQueryHandler getUseCase;
 
     @GetMapping
     public ResponseEntity<Page<TagResponseDto>> getTagsFiltered(
@@ -27,20 +30,20 @@ public class TagController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(
-                getUseCase.execute(color, pageable)
+                getUseCase.handle(new GetTagsQuery(color, pageable))
                         .map(TagDtoMapper::toResponseDto)
         );
     }
 
     @PostMapping
     public ResponseEntity<Void> createTag(@RequestBody TagCreateDto dto) {
-        createUseCase.execute(dto.getName(), dto.getColor());
+        createUseCase.handle(new CreateTagCommand(dto.getName(), dto.getColor()));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteTag(@PathVariable Long id) {
-        deleteUseCase.execute(id);
+        deleteUseCase.handle(new SoftDeleteTagCommand(id));
         return ResponseEntity.ok().build();
     }
 }

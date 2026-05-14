@@ -1,8 +1,9 @@
 package com.example.lab3.unit.application.usecase.tag;
 
-import com.example.lab3.application.usecase.tag.GetTagsUseCase;
-import com.example.lab3.domain.model.Tag;
-import com.example.lab3.domain.repository.TagRepository;
+import com.example.lab3.application.query.tag.GetTagsQuery;
+import com.example.lab3.application.query.tag.GetTagsQueryHandler;
+import com.example.lab3.application.query.tag.TagReadModel;
+import com.example.lab3.application.query.tag.TagReadRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,23 +16,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GetTagsUseCaseTest {
+class GetTagsQueryHandlerTest {
 
     @Mock
-    private TagRepository repository;
+    private TagReadRepository repository;
 
     @InjectMocks
-    private GetTagsUseCase useCase;
+    private GetTagsQueryHandler useCase;
 
     @Test
     @SuppressWarnings("unchecked")
-    void execute_ShouldReturnTagsByColor() {
+    void handle_ShouldReturnTagsByColor() {
         String color = "#FF0000";
         Pageable pageable = mock(Pageable.class);
-        Page<Tag> expectedPage = mock(Page.class);
+        Page<TagReadModel> expectedPage = mock(Page.class);
         when(repository.search(color, pageable)).thenReturn(expectedPage);
 
-        Page<Tag> result = useCase.execute(color, pageable);
+        Page<TagReadModel> result = useCase.handle(new GetTagsQuery(color, pageable));
 
         assertEquals(expectedPage, result);
         verify(repository).search(color, pageable);

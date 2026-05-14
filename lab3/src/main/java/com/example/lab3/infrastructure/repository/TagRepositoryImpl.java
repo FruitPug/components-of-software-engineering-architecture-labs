@@ -5,8 +5,6 @@ import com.example.lab3.domain.repository.TagRepository;
 import com.example.lab3.infrastructure.mapper.TagMapper;
 import com.example.lab3.infrastructure.persistence.repository.JpaTagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -27,12 +25,6 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Optional<Tag> findById(Long id) {
         return jpaRepository.findById(id)
-                .map(TagMapper::toDomain);
-    }
-
-    @Override
-    public Page<Tag> search(String color, Pageable pageable) {
-        return jpaRepository.searchTagsFiltered(color, pageable)
                 .map(TagMapper::toDomain);
     }
 }

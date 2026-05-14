@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.tag;
+package com.example.lab3.application.command.tag;
 
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Tag;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SoftDeleteTagUseCase {
+public class SoftDeleteTagCommandHandler {
 
     private final TagRepository repository;
 
     @Transactional
-    public void execute(Long id) {
-        Tag tag = repository.findById(id)
+    public void handle(SoftDeleteTagCommand cmd) {
+        Tag tag = repository.findById(cmd.id())
                 .orElseThrow(() -> new DomainError("TAG_NOT_FOUND"));
 
         tag.softDelete();

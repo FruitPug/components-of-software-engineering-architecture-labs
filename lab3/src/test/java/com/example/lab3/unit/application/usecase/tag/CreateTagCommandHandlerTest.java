@@ -1,6 +1,7 @@
 package com.example.lab3.unit.application.usecase.tag;
 
-import com.example.lab3.application.usecase.tag.CreateTagUseCase;
+import com.example.lab3.application.command.tag.CreateTagCommand;
+import com.example.lab3.application.command.tag.CreateTagCommandHandler;
 import com.example.lab3.domain.model.Tag;
 import com.example.lab3.domain.repository.TagRepository;
 import org.junit.jupiter.api.Test;
@@ -14,23 +15,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateTagUseCaseTest {
+class CreateTagCommandHandlerTest {
 
     @Mock
     private TagRepository repository;
 
     @InjectMocks
-    private CreateTagUseCase useCase;
+    private CreateTagCommandHandler useCase;
 
     @Test
-    void execute_ShouldCreateAndSaveTag() {
+    void handle_ShouldCreateAndSaveTag() {
         String name = "Urgent";
         String color = "#FF0000";
         Tag savedTag = mock(Tag.class);
         when(savedTag.getId()).thenReturn(1L);
         when(repository.save(any(Tag.class))).thenReturn(savedTag);
 
-        useCase.execute(name, color);
+        useCase.handle(new CreateTagCommand(name, color));
 
         ArgumentCaptor<Tag> tagCaptor = ArgumentCaptor.forClass(Tag.class);
         verify(repository).save(tagCaptor.capture());

@@ -1,6 +1,7 @@
 package com.example.lab3.unit.application.usecase.tag;
 
-import com.example.lab3.application.usecase.tag.SoftDeleteTagUseCase;
+import com.example.lab3.application.command.tag.SoftDeleteTagCommand;
+import com.example.lab3.application.command.tag.SoftDeleteTagCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Tag;
 import com.example.lab3.domain.repository.TagRepository;
@@ -17,32 +18,32 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SoftDeleteTagUseCaseTest {
+class SoftDeleteTagCommandHandlerTest {
 
     @Mock
     private TagRepository repository;
 
     @InjectMocks
-    private SoftDeleteTagUseCase useCase;
+    private SoftDeleteTagCommandHandler useCase;
 
     @Test
-    void execute_WhenTagExists_ShouldSoftDeleteAndSave() {
+    void handle_WhenTagExists_ShouldSoftDeleteAndSave() {
         Long tagId = 1L;
         Tag tag = mock(Tag.class);
         when(repository.findById(tagId)).thenReturn(Optional.of(tag));
 
-        useCase.execute(tagId);
+        useCase.handle(new SoftDeleteTagCommand(tagId));
 
         verify(tag).softDelete();
         verify(repository).save(tag);
     }
 
     @Test
-    void execute_WhenTagDoesNotExist_ShouldThrowException() {
+    void handle_WhenTagDoesNotExist_ShouldThrowException() {
         Long tagId = 1L;
         when(repository.findById(tagId)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(tagId));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(new SoftDeleteTagCommand(tagId)));
         assertEquals("TAG_NOT_FOUND", exception.getMessage());
         verify(repository, never()).save(any());
     }

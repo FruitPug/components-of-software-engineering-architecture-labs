@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.tag.TagReadModel;
 import com.example.lab3.domain.model.Tag;
 import com.example.lab3.infrastructure.persistence.entity.TagEntity;
 
@@ -24,6 +25,14 @@ public class TagMapper {
                 .createdAt(t.getCreatedAt())
                 .deleted(t.isDeleted())
                 .deletedAt(t.getDeletedAt())
+                .build();
+    }
+
+    public static TagReadModel toReadModel(TagEntity e) {
+        return TagReadModel.builder()
+                .id(e.getId())
+                .name(e.getName())
+                .color(e.getColor())
                 .build();
     }
 }
