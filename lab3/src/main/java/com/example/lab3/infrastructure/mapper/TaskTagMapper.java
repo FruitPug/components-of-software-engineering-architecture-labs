@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.task_tag.TaskTagReadModel;
 import com.example.lab3.domain.model.TaskTag;
 import com.example.lab3.infrastructure.persistence.entity.TagEntity;
 import com.example.lab3.infrastructure.persistence.entity.TaskEntity;
@@ -24,6 +25,14 @@ public class TaskTagMapper {
                 .id(tt.getId())
                 .task(task)
                 .tag(tag)
+                .build();
+    }
+
+    public static TaskTagReadModel toReadModel(TaskTagEntity e) {
+        return TaskTagReadModel.builder()
+                .id(e.getId())
+                .taskId(e.getTask().getId())
+                .tagId(e.getTag().getId())
                 .build();
     }
 }

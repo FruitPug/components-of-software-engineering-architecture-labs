@@ -1,6 +1,5 @@
-package com.example.lab3.application.usecase.task_tag;
+package com.example.lab3.application.command.task_tag;
 
-import com.example.lab3.application.command.task_tag.CreateTaskTagCommand;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.TaskTag;
 import com.example.lab3.domain.repository.TagRepository;
@@ -12,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateTaskTagUseCase {
+public class CreateTaskTagCommandHandler {
 
     private final TaskTagRepository taskTagRepository;
     private final TaskRepository taskRepository;
     private final TagRepository tagRepository;
 
     @Transactional
-    public void execute(CreateTaskTagCommand cmd) {
+    public void handle(CreateTaskTagCommand cmd) {
 
         taskRepository.findById(cmd.taskId())
                 .orElseThrow(() -> new DomainError("TASK_NOT_FOUND"));

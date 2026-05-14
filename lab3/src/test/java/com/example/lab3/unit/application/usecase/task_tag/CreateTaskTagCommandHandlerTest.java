@@ -1,7 +1,7 @@
 package com.example.lab3.unit.application.usecase.task_tag;
 
 import com.example.lab3.application.command.task_tag.CreateTaskTagCommand;
-import com.example.lab3.application.usecase.task_tag.CreateTaskTagUseCase;
+import com.example.lab3.application.command.task_tag.CreateTaskTagCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Tag;
 import com.example.lab3.domain.model.Task;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateTaskTagUseCaseTest {
+class CreateTaskTagCommandHandlerTest {
 
     @Mock
     private TaskTagRepository taskTagRepository;
@@ -32,48 +32,48 @@ class CreateTaskTagUseCaseTest {
     private TagRepository tagRepository;
 
     @InjectMocks
-    private CreateTaskTagUseCase useCase;
+    private CreateTaskTagCommandHandler useCase;
 
     @Test
-    void execute_WhenValid_ShouldCreateTaskTag() {
+    void handle_WhenValid_ShouldCreateTaskTag() {
         CreateTaskTagCommand cmd = new CreateTaskTagCommand(1L, 2L);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(mock(Task.class)));
         when(tagRepository.findById(2L)).thenReturn(Optional.of(mock(Tag.class)));
         when(taskTagRepository.exists(1L, 2L)).thenReturn(false);
         when(taskTagRepository.save(any(TaskTag.class))).thenReturn(mock(TaskTag.class));
 
-        useCase.execute(cmd);
+        useCase.handle(cmd);
 
         verify(taskTagRepository).save(any(TaskTag.class));
     }
 
     @Test
-    void execute_WhenTaskNotFound_ShouldThrowException() {
+    void handle_WhenTaskNotFound_ShouldThrowException() {
         CreateTaskTagCommand cmd = new CreateTaskTagCommand(1L, 2L);
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("TASK_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenTagNotFound_ShouldThrowException() {
+    void handle_WhenTagNotFound_ShouldThrowException() {
         CreateTaskTagCommand cmd = new CreateTaskTagCommand(1L, 2L);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(mock(Task.class)));
         when(tagRepository.findById(2L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("TAG_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenTaskTagAlreadyExists_ShouldThrowException() {
+    void handle_WhenTaskTagAlreadyExists_ShouldThrowException() {
         CreateTaskTagCommand cmd = new CreateTaskTagCommand(1L, 2L);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(mock(Task.class)));
         when(tagRepository.findById(2L)).thenReturn(Optional.of(mock(Tag.class)));
         when(taskTagRepository.exists(1L, 2L)).thenReturn(true);
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("TASK_TAG_ALREADY_EXISTS", exception.getMessage());
     }
 }
