@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.project_member.ProjectMemberReadModel;
 import com.example.lab3.domain.model.ProjectMember;
 import com.example.lab3.infrastructure.persistence.entity.ProjectEntity;
 import com.example.lab3.infrastructure.persistence.entity.UserEntity;
@@ -28,6 +29,15 @@ public class ProjectMemberMapper {
                 .user(user)
                 .role(member.getRole())
                 .joinedAt(member.getJoinedAt())
+                .build();
+    }
+
+    public static ProjectMemberReadModel toReadModel(ProjectMemberEntity e) {
+        return ProjectMemberReadModel.builder()
+                .id(e.getId())
+                .projectId(e.getProject().getId())
+                .userId(e.getUser().getId())
+                .role(e.getRole())
                 .build();
     }
 }

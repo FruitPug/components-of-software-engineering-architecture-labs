@@ -1,7 +1,7 @@
 package com.example.lab3.unit.application.usecase.project_member;
 
 import com.example.lab3.application.command.project_member.CreateProjectMemberCommand;
-import com.example.lab3.application.usecase.project_member.CreateProjectMemberUseCase;
+import com.example.lab3.application.command.project_member.CreateProjectMemberCommandHandler;
 import com.example.lab3.domain.enums.ProjectMemberRole;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateProjectMemberUseCaseTest {
+class CreateProjectMemberCommandHandlerTest {
 
     @Mock
     private ProjectMemberRepository memberRepository;
@@ -33,59 +33,59 @@ class CreateProjectMemberUseCaseTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private CreateProjectMemberUseCase useCase;
+    private CreateProjectMemberCommandHandler useCase;
 
     @Test
-    void execute_WhenValid_ShouldCreateMember() {
+    void handle_WhenValid_ShouldCreateMember() {
         CreateProjectMemberCommand cmd = new CreateProjectMemberCommand(1L, 2L, ProjectMemberRole.CONTRIBUTOR);
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(memberRepository.exists(1L, 2L)).thenReturn(false);
         when(memberRepository.save(any(ProjectMember.class))).thenReturn(mock(ProjectMember.class));
 
-        useCase.execute(cmd);
+        useCase.handle(cmd);
 
         verify(memberRepository).save(any(ProjectMember.class));
     }
 
     @Test
-    void execute_WhenProjectNotFound_ShouldThrowException() {
+    void handle_WhenProjectNotFound_ShouldThrowException() {
         CreateProjectMemberCommand cmd = new CreateProjectMemberCommand(1L, 2L, ProjectMemberRole.CONTRIBUTOR);
         when(projectRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("PROJECT_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenUserNotFound_ShouldThrowException() {
+    void handle_WhenUserNotFound_ShouldThrowException() {
         CreateProjectMemberCommand cmd = new CreateProjectMemberCommand(1L, 2L, ProjectMemberRole.CONTRIBUTOR);
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("USER_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenRoleIsOwnerAndOwnerExists_ShouldThrowException() {
+    void handle_WhenRoleIsOwnerAndOwnerExists_ShouldThrowException() {
         CreateProjectMemberCommand cmd = new CreateProjectMemberCommand(1L, 2L, ProjectMemberRole.OWNER);
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(memberRepository.findOwner(1L)).thenReturn(Optional.of(mock(ProjectMember.class)));
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("PROJECT_ALREADY_HAS_OWNER", exception.getMessage());
     }
 
     @Test
-    void execute_WhenMemberAlreadyExists_ShouldThrowException() {
+    void handle_WhenMemberAlreadyExists_ShouldThrowException() {
         CreateProjectMemberCommand cmd = new CreateProjectMemberCommand(1L, 2L, ProjectMemberRole.CONTRIBUTOR);
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(memberRepository.exists(1L, 2L)).thenReturn(true);
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("MEMBER_ALREADY_EXISTS", exception.getMessage());
     }
 }

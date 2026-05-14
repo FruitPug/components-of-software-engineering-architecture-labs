@@ -1,9 +1,11 @@
 package com.example.lab3.presentation.controller;
 
 import com.example.lab3.application.command.project_member.CreateProjectMemberCommand;
-import com.example.lab3.application.usecase.project_member.CreateProjectMemberUseCase;
-import com.example.lab3.application.usecase.project_member.GetProjectMembersUseCase;
-import com.example.lab3.application.usecase.project_member.HardDeleteProjectMemberUseCase;
+import com.example.lab3.application.command.project_member.CreateProjectMemberCommandHandler;
+import com.example.lab3.application.command.project_member.HardDeleteProjectMemberCommand;
+import com.example.lab3.application.query.project_member.GetProjectMembersQuery;
+import com.example.lab3.application.query.project_member.GetProjectMembersQueryHandler;
+import com.example.lab3.application.command.project_member.HardDeleteProjectMemberCommandHandler;
 import com.example.lab3.presentation.mapper.ProjectMemberDtoMapper;
 import com.example.lab3.presentation.dto.request.ProjectMemberCreateDto;
 import com.example.lab3.presentation.dto.response.ProjectMemberResponseDto;
@@ -19,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProjectMemberController {
 
-    private final CreateProjectMemberUseCase createUseCase;
-    private final HardDeleteProjectMemberUseCase deleteUseCase;
-    private final GetProjectMembersUseCase getUseCase;
+    private final CreateProjectMemberCommandHandler createUseCase;
+    private final HardDeleteProjectMemberCommandHandler deleteUseCase;
+    private final GetProjectMembersQueryHandler getUseCase;
 
     @GetMapping
     public ResponseEntity<Page<ProjectMemberResponseDto>> getProjectMembersFiltered(
@@ -31,7 +33,7 @@ public class ProjectMemberController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(
-                getUseCase.execute(projectId, userId, role, pageable)
+                getUseCase.handle(new GetProjectMembersQuery(projectId, userId, role, pageable))
                         .map(ProjectMemberDtoMapper::toResponseDto)
         );
     }
@@ -40,7 +42,7 @@ public class ProjectMemberController {
     public ResponseEntity<Void> createProjectMember(
             @RequestBody ProjectMemberCreateDto dto
     ) {
-        createUseCase.execute(
+        createUseCase.handle(
                 new CreateProjectMemberCommand(
                         dto.getProjectId(),
                         dto.getUserId(),
@@ -52,7 +54,7 @@ public class ProjectMemberController {
 
     @DeleteMapping("/{id}/hard")
     public ResponseEntity<Void> hardDeleteProject(@PathVariable Long id) {
-        deleteUseCase.execute(id);
+        deleteUseCase.handle(new HardDeleteProjectMemberCommand(id));
         return ResponseEntity.ok().build();
     }
 }

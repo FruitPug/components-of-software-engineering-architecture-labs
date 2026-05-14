@@ -1,6 +1,5 @@
 package com.example.lab3.infrastructure.repository;
 
-import com.example.lab3.domain.enums.ProjectMemberRole;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.ProjectMember;
 import com.example.lab3.domain.repository.ProjectMemberRepository;
@@ -12,8 +11,6 @@ import com.example.lab3.infrastructure.persistence.repository.JpaProjectReposito
 import com.example.lab3.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab3.infrastructure.persistence.entity.ProjectMemberEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -47,14 +44,6 @@ public class ProjectMemberRepositoryImpl implements ProjectMemberRepository {
     @Override
     public boolean exists(Long projectId, Long userId) {
         return jpaRepository.existsByProject_IdAndUser_Id(projectId, userId);
-    }
-
-    @Override
-    public Page<ProjectMember> search(Long projectId, Long userId,
-                                      ProjectMemberRole role, Pageable pageable) {
-        return jpaRepository.searchProjectMembersFiltered(
-                projectId, userId, role, pageable
-        ).map(ProjectMemberMapper::toDomain);
     }
 
     @Override

@@ -1,6 +1,5 @@
-package com.example.lab3.application.usecase.project_member;
+package com.example.lab3.application.command.project_member;
 
-import com.example.lab3.application.command.project_member.CreateProjectMemberCommand;
 import com.example.lab3.domain.enums.ProjectMemberRole;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.ProjectMember;
@@ -13,14 +12,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateProjectMemberUseCase {
+public class CreateProjectMemberCommandHandler {
 
     private final ProjectMemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void execute(CreateProjectMemberCommand cmd) {
+    public void handle(CreateProjectMemberCommand cmd) {
 
         projectRepository.findById(cmd.projectId())
                 .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));

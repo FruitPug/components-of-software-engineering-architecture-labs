@@ -1,6 +1,7 @@
 package com.example.lab3.unit.application.usecase.project_member;
 
-import com.example.lab3.application.usecase.project_member.HardDeleteProjectMemberUseCase;
+import com.example.lab3.application.command.project_member.HardDeleteProjectMemberCommand;
+import com.example.lab3.application.command.project_member.HardDeleteProjectMemberCommandHandler;
 import com.example.lab3.domain.repository.ProjectMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,19 +12,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class HardDeleteProjectMemberUseCaseTest {
+class HardDeleteProjectMemberCommandHandlerTest {
 
     @Mock
     private ProjectMemberRepository repository;
 
     @InjectMocks
-    private HardDeleteProjectMemberUseCase useCase;
+    private HardDeleteProjectMemberCommandHandler useCase;
 
     @Test
-    void execute_ShouldHardDelete() {
+    void handle_ShouldHardDelete() {
         Long memberId = 1L;
 
-        useCase.execute(memberId);
+        useCase.handle(new HardDeleteProjectMemberCommand(memberId));
 
         verify(repository).hardDelete(memberId);
     }

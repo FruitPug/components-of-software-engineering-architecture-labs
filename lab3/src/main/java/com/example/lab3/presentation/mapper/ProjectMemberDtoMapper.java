@@ -1,5 +1,6 @@
 package com.example.lab3.presentation.mapper;
 
+import com.example.lab3.application.query.project_member.ProjectMemberReadModel;
 import com.example.lab3.domain.model.ProjectMember;
 import com.example.lab3.presentation.dto.response.ProjectMemberResponseDto;
 
@@ -10,6 +11,14 @@ public class ProjectMemberDtoMapper {
                 .projectId(m.getProjectId())
                 .userId(m.getUserId())
                 .role(m.getRole())
+                .build();
+    }
+
+    public static ProjectMemberResponseDto toResponseDto(ProjectMemberReadModel m) {
+        return ProjectMemberResponseDto.builder()
+                .projectId(m.projectId())
+                .userId(m.userId())
+                .role(m.role())
                 .build();
     }
 }
