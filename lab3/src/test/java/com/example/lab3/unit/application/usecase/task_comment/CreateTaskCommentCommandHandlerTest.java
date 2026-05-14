@@ -1,7 +1,7 @@
 package com.example.lab3.unit.application.usecase.task_comment;
 
 import com.example.lab3.application.command.task_comment.CreateTaskCommentCommand;
-import com.example.lab3.application.usecase.task_comment.CreateTaskCommentUseCase;
+import com.example.lab3.application.command.task_comment.CreateTaskCommentCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.domain.model.TaskComment;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateTaskCommentUseCaseTest {
+class CreateTaskCommentCommandHandlerTest {
 
     @Mock
     private TaskCommentRepository commentRepository;
@@ -32,36 +32,36 @@ class CreateTaskCommentUseCaseTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private CreateTaskCommentUseCase useCase;
+    private CreateTaskCommentCommandHandler useCase;
 
     @Test
-    void execute_WhenValid_ShouldCreateComment() {
+    void handle_WhenValid_ShouldCreateComment() {
         CreateTaskCommentCommand cmd = new CreateTaskCommentCommand(1L, 2L, "Great job!");
         when(taskRepository.findById(1L)).thenReturn(Optional.of(mock(Task.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(commentRepository.save(any(TaskComment.class))).thenReturn(mock(TaskComment.class));
 
-        useCase.execute(cmd);
+        useCase.handle(cmd);
 
         verify(commentRepository).save(any(TaskComment.class));
     }
 
     @Test
-    void execute_WhenTaskNotFound_ShouldThrowException() {
+    void handle_WhenTaskNotFound_ShouldThrowException() {
         CreateTaskCommentCommand cmd = new CreateTaskCommentCommand(1L, 2L, "Body");
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("TASK_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenUserNotFound_ShouldThrowException() {
+    void handle_WhenUserNotFound_ShouldThrowException() {
         CreateTaskCommentCommand cmd = new CreateTaskCommentCommand(1L, 2L, "Body");
         when(taskRepository.findById(1L)).thenReturn(Optional.of(mock(Task.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("USER_NOT_FOUND", exception.getMessage());
     }
 }

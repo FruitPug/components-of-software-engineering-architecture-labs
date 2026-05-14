@@ -1,6 +1,5 @@
-package com.example.lab3.application.usecase.task_comment;
+package com.example.lab3.application.command.task_comment;
 
-import com.example.lab3.application.command.task_comment.CreateTaskCommentCommand;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.TaskComment;
 import com.example.lab3.domain.repository.TaskCommentRepository;
@@ -12,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateTaskCommentUseCase {
+public class CreateTaskCommentCommandHandler {
 
     private final TaskCommentRepository commentRepository;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void execute(CreateTaskCommentCommand cmd) {
+    public void handle(CreateTaskCommentCommand cmd) {
 
         taskRepository.findById(cmd.taskId())
                 .orElseThrow(() -> new DomainError("TASK_NOT_FOUND"));

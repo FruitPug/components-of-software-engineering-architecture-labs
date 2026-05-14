@@ -1,9 +1,11 @@
 package com.example.lab3.presentation.controller;
 
 import com.example.lab3.application.command.task_comment.CreateTaskCommentCommand;
-import com.example.lab3.application.usecase.task_comment.CreateTaskCommentUseCase;
-import com.example.lab3.application.usecase.task_comment.GetTaskCommentsUseCase;
-import com.example.lab3.application.usecase.task_comment.SoftDeleteTaskCommentUseCase;
+import com.example.lab3.application.command.task_comment.CreateTaskCommentCommandHandler;
+import com.example.lab3.application.command.task_comment.SoftDeleteTaskCommentCommand;
+import com.example.lab3.application.query.task_comment.GetTaskCommentsQuery;
+import com.example.lab3.application.query.task_comment.GetTaskCommentsQueryHandler;
+import com.example.lab3.application.command.task_comment.SoftDeleteTaskCommentCommandHandler;
 import com.example.lab3.presentation.mapper.TaskCommentDtoMapper;
 import com.example.lab3.presentation.dto.request.TaskCommentCreateDto;
 import com.example.lab3.presentation.dto.response.TaskCommentResponseDto;
@@ -18,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TaskCommentController {
 
-    private final CreateTaskCommentUseCase createUseCase;
-    private final SoftDeleteTaskCommentUseCase deleteUseCase;
-    private final GetTaskCommentsUseCase getUseCase;
+    private final CreateTaskCommentCommandHandler createUseCase;
+    private final SoftDeleteTaskCommentCommandHandler deleteUseCase;
+    private final GetTaskCommentsQueryHandler getUseCase;
 
     @GetMapping
     public ResponseEntity<Page<TaskCommentResponseDto>> getCommentsFiltered(
@@ -29,7 +31,7 @@ public class TaskCommentController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(
-                getUseCase.execute(taskId, userId, pageable)
+                getUseCase.handle(new GetTaskCommentsQuery(taskId, userId, pageable))
                         .map(TaskCommentDtoMapper::toResponseDto)
         );
     }
@@ -38,7 +40,7 @@ public class TaskCommentController {
     public ResponseEntity<Void> createComment(
             @RequestBody TaskCommentCreateDto dto
     ) {
-        createUseCase.execute(
+        createUseCase.handle(
                 new CreateTaskCommentCommand(
                         dto.getTaskId(),
                         dto.getAuthorUserId(),
@@ -50,7 +52,7 @@ public class TaskCommentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteComment(@PathVariable Long id) {
-        deleteUseCase.execute(id);
+        deleteUseCase.handle(new SoftDeleteTaskCommentCommand(id));
         return ResponseEntity.ok().build();
     }
 }

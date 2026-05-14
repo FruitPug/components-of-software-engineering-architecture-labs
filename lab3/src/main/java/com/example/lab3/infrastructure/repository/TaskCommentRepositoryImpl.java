@@ -10,11 +10,8 @@ import com.example.lab3.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab3.infrastructure.persistence.repository.JpaUserRepository;
 import com.example.lab3.infrastructure.persistence.entity.TaskCommentEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -43,14 +40,4 @@ public class TaskCommentRepositoryImpl implements TaskCommentRepository {
                 .map(TaskCommentMapper::toDomain);
     }
 
-    @Override
-    public Page<TaskComment> search(Long taskId, Long userId, Pageable pageable) {
-        return jpaRepository.searchCommentsFiltered(taskId, userId, pageable)
-                .map(TaskCommentMapper::toDomain);
-    }
-
-    @Override
-    public void softDeleteByTaskId(Long taskId) {
-        jpaRepository.softDeleteByTaskId(taskId, LocalDateTime.now());
-    }
 }

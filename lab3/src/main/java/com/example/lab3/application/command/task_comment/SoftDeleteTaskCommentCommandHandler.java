@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.task_comment;
+package com.example.lab3.application.command.task_comment;
 
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.TaskComment;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SoftDeleteTaskCommentUseCase {
+public class SoftDeleteTaskCommentCommandHandler {
 
     private final TaskCommentRepository repository;
 
     @Transactional
-    public void execute(Long id) {
-        TaskComment comment = repository.findById(id)
+    public void handle(SoftDeleteTaskCommentCommand cmd) {
+        TaskComment comment = repository.findById(cmd.id())
                 .orElseThrow(() -> new DomainError("COMMENT_NOT_FOUND"));
 
         comment.softDelete();

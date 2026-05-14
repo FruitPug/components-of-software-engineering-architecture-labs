@@ -1,6 +1,7 @@
 package com.example.lab3.unit.application.usecase.task_comment;
 
-import com.example.lab3.application.usecase.task_comment.SoftDeleteTaskCommentUseCase;
+import com.example.lab3.application.command.task_comment.SoftDeleteTaskCommentCommand;
+import com.example.lab3.application.command.task_comment.SoftDeleteTaskCommentCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.TaskComment;
 import com.example.lab3.domain.repository.TaskCommentRepository;
@@ -17,32 +18,32 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SoftDeleteTaskCommentUseCaseTest {
+class SoftDeleteTaskCommentCommandHandlerTest {
 
     @Mock
     private TaskCommentRepository repository;
 
     @InjectMocks
-    private SoftDeleteTaskCommentUseCase useCase;
+    private SoftDeleteTaskCommentCommandHandler useCase;
 
     @Test
-    void execute_WhenCommentExists_ShouldSoftDeleteAndSave() {
+    void handle_WhenCommentExists_ShouldSoftDeleteAndSave() {
         Long commentId = 1L;
         TaskComment comment = mock(TaskComment.class);
         when(repository.findById(commentId)).thenReturn(Optional.of(comment));
 
-        useCase.execute(commentId);
+        useCase.handle(new SoftDeleteTaskCommentCommand(commentId));
 
         verify(comment).softDelete();
         verify(repository).save(comment);
     }
 
     @Test
-    void execute_WhenCommentDoesNotExist_ShouldThrowException() {
+    void handle_WhenCommentDoesNotExist_ShouldThrowException() {
         Long commentId = 1L;
         when(repository.findById(commentId)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(commentId));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(new SoftDeleteTaskCommentCommand(commentId)));
         assertEquals("COMMENT_NOT_FOUND", exception.getMessage());
         verify(repository, never()).save(any());
     }

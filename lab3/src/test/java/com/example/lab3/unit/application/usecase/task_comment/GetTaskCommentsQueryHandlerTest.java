@@ -1,8 +1,9 @@
 package com.example.lab3.unit.application.usecase.task_comment;
 
-import com.example.lab3.application.usecase.task_comment.GetTaskCommentsUseCase;
-import com.example.lab3.domain.model.TaskComment;
-import com.example.lab3.domain.repository.TaskCommentRepository;
+import com.example.lab3.application.query.task_comment.GetTaskCommentsQuery;
+import com.example.lab3.application.query.task_comment.GetTaskCommentsQueryHandler;
+import com.example.lab3.application.query.task_comment.TaskCommentReadModel;
+import com.example.lab3.application.query.task_comment.TaskCommentReadRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,24 +16,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GetTaskCommentsUseCaseTest {
+class GetTaskCommentsQueryHandlerTest {
 
     @Mock
-    private TaskCommentRepository repository;
+    private TaskCommentReadRepository repository;
 
     @InjectMocks
-    private GetTaskCommentsUseCase useCase;
+    private GetTaskCommentsQueryHandler useCase;
 
     @Test
     @SuppressWarnings("unchecked")
-    void execute_ShouldReturnComments() {
+    void handle_ShouldReturnComments() {
         Long taskId = 1L;
         Long userId = 2L;
         Pageable pageable = mock(Pageable.class);
-        Page<TaskComment> expectedPage = mock(Page.class);
+        Page<TaskCommentReadModel> expectedPage = mock(Page.class);
         when(repository.search(taskId, userId, pageable)).thenReturn(expectedPage);
 
-        Page<TaskComment> result = useCase.execute(taskId, userId, pageable);
+        Page<TaskCommentReadModel> result = useCase.handle(new GetTaskCommentsQuery(taskId, userId, pageable));
 
         assertEquals(expectedPage, result);
         verify(repository).search(taskId, userId, pageable);

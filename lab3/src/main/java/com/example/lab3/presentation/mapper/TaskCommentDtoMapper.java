@@ -1,5 +1,6 @@
 package com.example.lab3.presentation.mapper;
 
+import com.example.lab3.application.query.task_comment.TaskCommentReadModel;
 import com.example.lab3.domain.model.TaskComment;
 import com.example.lab3.presentation.dto.response.TaskCommentResponseDto;
 
@@ -10,6 +11,14 @@ public class TaskCommentDtoMapper {
                 .taskId(c.getTaskId())
                 .authorId(c.getAuthorId())
                 .body(c.getBody())
+                .build();
+    }
+
+    public static TaskCommentResponseDto toResponseDto(TaskCommentReadModel c) {
+        return TaskCommentResponseDto.builder()
+                .taskId(c.taskId())
+                .authorId(c.authorId())
+                .body(c.body())
                 .build();
     }
 }

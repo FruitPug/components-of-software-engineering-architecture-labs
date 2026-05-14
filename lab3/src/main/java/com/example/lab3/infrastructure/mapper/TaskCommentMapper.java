@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.task_comment.TaskCommentReadModel;
 import com.example.lab3.domain.model.TaskComment;
 import com.example.lab3.infrastructure.persistence.entity.TaskEntity;
 import com.example.lab3.infrastructure.persistence.entity.UserEntity;
@@ -34,6 +35,15 @@ public class TaskCommentMapper {
                 .updatedAt(c.getUpdatedAt())
                 .deleted(c.isDeleted())
                 .deletedAt(c.getDeletedAt())
+                .build();
+    }
+
+    public static TaskCommentReadModel toReadModel(TaskCommentEntity e) {
+        return TaskCommentReadModel.builder()
+                .id(e.getId())
+                .taskId(e.getTask().getId())
+                .authorId(e.getAuthor().getId())
+                .body(e.getBody())
                 .build();
     }
 }
