@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.user.UserReadModel;
 import com.example.lab3.domain.model.User;
 import com.example.lab3.infrastructure.persistence.entity.UserEntity;
 
@@ -31,6 +32,15 @@ public class UserMapper {
                 .updatedAt(user.getUpdatedAt())
                 .deleted(user.isDeleted())
                 .deletedAt(user.getDeletedAt())
+                .build();
+    }
+
+    public static UserReadModel toReadModel(UserEntity e) {
+        return UserReadModel.builder()
+                .id(e.getId())
+                .email(e.getEmail())
+                .fullName(e.getFullName())
+                .role(e.getRole())
                 .build();
     }
 }

@@ -18,8 +18,13 @@ public class TaskReadRepositoryImpl implements TaskReadRepository {
     private final JpaTaskRepository jpaRepository;
 
     @Override
-    public Page<TaskReadModel> search(TaskStatus status, TaskPriority priority,
-                                      Long projectId, Long assigneeId, Pageable pageable) {
+    public Page<TaskReadModel> search(
+            TaskStatus status,
+            TaskPriority priority,
+            Long projectId,
+            Long assigneeId,
+            Pageable pageable
+    ) {
         return jpaRepository.searchTasksFiltered(status, priority, projectId, assigneeId, pageable)
                 .map(TaskMapper::toReadModel);
     }

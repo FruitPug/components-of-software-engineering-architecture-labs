@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.project.ProjectReadModel;
 import com.example.lab3.domain.model.Project;
 import com.example.lab3.infrastructure.persistence.entity.ProjectEntity;
 
@@ -28,6 +29,15 @@ public class ProjectMapper {
                 .updatedAt(p.getUpdatedAt())
                 .deleted(p.isDeleted())
                 .deletedAt(p.getDeletedAt())
+                .build();
+    }
+
+    public static ProjectReadModel toReadModel(ProjectEntity e) {
+        return ProjectReadModel.builder()
+                .id(e.getId())
+                .name(e.getName())
+                .description(e.getDescription())
+                .status(e.getStatus())
                 .build();
     }
 }
