@@ -1,5 +1,6 @@
 package com.example.lab3.infrastructure.mapper;
 
+import com.example.lab3.application.query.task.TaskReadModel;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.infrastructure.persistence.entity.ProjectEntity;
 import com.example.lab3.infrastructure.persistence.entity.TaskEntity;
@@ -47,6 +48,20 @@ public class TaskMapper {
                 .deleted(t.isDeleted())
                 .deletedAt(t.getDeletedAt())
                 .version(t.getVersion())
+                .build();
+    }
+
+    public static TaskReadModel toReadModel(TaskEntity e) {
+        return TaskReadModel.builder()
+                .id(e.getId())
+                .projectId(e.getProject().getId())
+                .creatorId(e.getCreator().getId())
+                .assigneeId(e.getAssignee().getId())
+                .title(e.getTitle())
+                .description(e.getDescription())
+                .status(e.getStatus())
+                .priority(e.getPriority())
+                .dueDate(e.getDueDate())
                 .build();
     }
 }

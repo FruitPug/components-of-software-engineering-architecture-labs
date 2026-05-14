@@ -1,6 +1,8 @@
 package com.example.lab3.unit.application.usecase.task;
 
-import com.example.lab3.application.usecase.task.SoftDeleteTaskUseCase;
+import com.example.lab3.application.command.task.UpdateTaskStatusCommand;
+import com.example.lab3.application.command.task.UpdateTaskStatusCommandHandler;
+import com.example.lab3.domain.enums.TaskStatus;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.domain.repository.TaskRepository;
@@ -17,32 +19,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class SoftDeleteTaskUseCaseTest {
+class UpdateTaskStatusCommandHandlerTest {
 
     @Mock
     private TaskRepository repository;
 
     @InjectMocks
-    private SoftDeleteTaskUseCase useCase;
+    private UpdateTaskStatusCommandHandler useCase;
 
     @Test
-    void execute_WhenTaskExists_ShouldSoftDeleteAndSave() {
+    void handle_WhenTaskExists_ShouldUpdateStatusAndSave() {
         Long taskId = 1L;
+        TaskStatus newStatus = TaskStatus.IN_PROGRESS;
         Task task = mock(Task.class);
         when(repository.findById(taskId)).thenReturn(Optional.of(task));
 
-        useCase.execute(taskId);
+        useCase.handle(new UpdateTaskStatusCommand(taskId, newStatus));
 
-        verify(task).softDelete();
+        verify(task).updateStatus(newStatus);
         verify(repository).save(task);
     }
 
     @Test
-    void execute_WhenTaskDoesNotExist_ShouldThrowException() {
+    void handle_WhenTaskDoesNotExist_ShouldThrowException() {
         Long taskId = 1L;
+        TaskStatus newStatus = TaskStatus.IN_PROGRESS;
         when(repository.findById(taskId)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(taskId));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(new UpdateTaskStatusCommand(taskId, newStatus)));
         assertEquals("TASK_NOT_FOUND", exception.getMessage());
         verify(repository, never()).save(any());
     }

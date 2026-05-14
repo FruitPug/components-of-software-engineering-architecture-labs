@@ -1,6 +1,7 @@
 package com.example.lab3.presentation.mapper;
 
 import com.example.lab3.application.command.task.CreateTaskCommand;
+import com.example.lab3.application.query.task.TaskReadModel;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.presentation.dto.request.TaskCreateDto;
 import com.example.lab3.presentation.dto.response.TaskResponseDto;
@@ -32,6 +33,20 @@ public class TaskDtoMapper {
                 .status(task.getStatus())
                 .priority(task.getPriority())
                 .dueDate(task.getDueDate())
+                .build();
+    }
+
+    public static TaskResponseDto toResponseDto(TaskReadModel task) {
+        return TaskResponseDto.builder()
+                .id(task.id())
+                .projectId(task.projectId())
+                .creatorUserId(task.creatorId())
+                .assigneeUserId(task.assigneeId())
+                .title(task.title())
+                .description(task.description())
+                .status(task.status())
+                .priority(task.priority())
+                .dueDate(task.dueDate())
                 .build();
     }
 }

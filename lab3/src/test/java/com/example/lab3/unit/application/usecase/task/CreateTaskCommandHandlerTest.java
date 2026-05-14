@@ -1,7 +1,7 @@
 package com.example.lab3.unit.application.usecase.task;
 
 import com.example.lab3.application.command.task.CreateTaskCommand;
-import com.example.lab3.application.usecase.task.CreateTaskUseCase;
+import com.example.lab3.application.command.task.CreateTaskCommandHandler;
 import com.example.lab3.domain.enums.TaskPriority;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Project;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CreateTaskUseCaseTest {
+class CreateTaskCommandHandlerTest {
 
     @Mock
     private TaskRepository taskRepository;
@@ -34,48 +34,48 @@ class CreateTaskUseCaseTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private CreateTaskUseCase useCase;
+    private CreateTaskCommandHandler useCase;
 
     @Test
-    void execute_WhenValid_ShouldCreateTask() {
+    void handle_WhenValid_ShouldCreateTask() {
         CreateTaskCommand cmd = new CreateTaskCommand(1L, 2L, 3L, "Task 1", "Desc", TaskPriority.HIGH, LocalDate.now());
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(userRepository.findById(3L)).thenReturn(Optional.of(mock(User.class)));
         when(taskRepository.save(any(Task.class))).thenReturn(mock(Task.class));
 
-        useCase.execute(cmd);
+        useCase.handle(cmd);
 
         verify(taskRepository).save(any(Task.class));
     }
 
     @Test
-    void execute_WhenProjectNotFound_ShouldThrowException() {
+    void handle_WhenProjectNotFound_ShouldThrowException() {
         CreateTaskCommand cmd = new CreateTaskCommand(1L, 2L, 3L, "T1", "D", TaskPriority.LOW, LocalDate.now());
         when(projectRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("PROJECT_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenCreatorNotFound_ShouldThrowException() {
+    void handle_WhenCreatorNotFound_ShouldThrowException() {
         CreateTaskCommand cmd = new CreateTaskCommand(1L, 2L, 3L, "T1", "D", TaskPriority.LOW, LocalDate.now());
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("CREATOR_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenAssigneeNotFound_ShouldThrowException() {
+    void handle_WhenAssigneeNotFound_ShouldThrowException() {
         CreateTaskCommand cmd = new CreateTaskCommand(1L, 2L, 3L, "T1", "D", TaskPriority.LOW, LocalDate.now());
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(userRepository.findById(3L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(cmd));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(cmd));
         assertEquals("ASSIGNEE_NOT_FOUND", exception.getMessage());
     }
 }

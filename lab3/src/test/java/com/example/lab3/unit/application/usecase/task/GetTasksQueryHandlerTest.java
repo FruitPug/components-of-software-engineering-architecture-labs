@@ -1,10 +1,11 @@
 package com.example.lab3.unit.application.usecase.task;
 
-import com.example.lab3.application.usecase.task.GetTasksUseCase;
+import com.example.lab3.application.query.task.GetTasksQuery;
+import com.example.lab3.application.query.task.GetTasksQueryHandler;
+import com.example.lab3.application.query.task.TaskReadModel;
+import com.example.lab3.application.query.task.TaskReadRepository;
 import com.example.lab3.domain.enums.TaskPriority;
 import com.example.lab3.domain.enums.TaskStatus;
-import com.example.lab3.domain.model.Task;
-import com.example.lab3.domain.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,26 +18,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GetTasksUseCaseTest {
+class GetTasksQueryHandlerTest {
 
     @Mock
-    private TaskRepository repository;
+    private TaskReadRepository repository;
 
     @InjectMocks
-    private GetTasksUseCase useCase;
+    private GetTasksQueryHandler useCase;
 
     @Test
     @SuppressWarnings("unchecked")
-    void execute_ShouldReturnTasks() {
+    void handle_ShouldReturnTasks() {
         TaskStatus status = TaskStatus.TODO;
         TaskPriority priority = TaskPriority.MEDIUM;
         Long projectId = 1L;
         Long assigneeId = 2L;
         Pageable pageable = mock(Pageable.class);
-        Page<Task> expectedPage = mock(Page.class);
+        Page<TaskReadModel> expectedPage = mock(Page.class);
         when(repository.search(status, priority, projectId, assigneeId, pageable)).thenReturn(expectedPage);
 
-        Page<Task> result = useCase.execute(status, priority, projectId, assigneeId, pageable);
+        Page<TaskReadModel> result = useCase.handle(new GetTasksQuery(status, priority, projectId, assigneeId, pageable));
 
         assertEquals(expectedPage, result);
         verify(repository).search(status, priority, projectId, assigneeId, pageable);

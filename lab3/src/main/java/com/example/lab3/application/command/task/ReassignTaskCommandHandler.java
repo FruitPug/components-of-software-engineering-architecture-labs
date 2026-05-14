@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.task;
+package com.example.lab3.application.command.task;
 
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Task;
@@ -11,27 +11,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ReassignTaskUseCase {
+public class ReassignTaskCommandHandler {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final ProjectMemberRepository memberRepository;
 
     @Transactional
-    public void execute(Long taskId, Long newAssigneeId) {
+    public void handle(ReassignTaskCommand cmd) {
 
-        Task task = taskRepository.findById(taskId)
+        Task task = taskRepository.findById(cmd.taskId())
                 .orElseThrow(() -> new DomainError("TASK_NOT_FOUND"));
 
-        userRepository.findById(newAssigneeId)
+        userRepository.findById(cmd.newAssigneeId())
                 .orElseThrow(() -> new DomainError("USER_NOT_FOUND"));
 
-        boolean isMember = memberRepository.exists(task.getProjectId(), newAssigneeId);
+        boolean isMember = memberRepository.exists(task.getProjectId(), cmd.newAssigneeId());
         if (!isMember) {
             throw new DomainError("ASSIGNEE_NOT_PROJECT_MEMBER");
         }
 
-        task.reassign(newAssigneeId);
+        task.reassign(cmd.newAssigneeId());
         taskRepository.save(task);
     }
 }

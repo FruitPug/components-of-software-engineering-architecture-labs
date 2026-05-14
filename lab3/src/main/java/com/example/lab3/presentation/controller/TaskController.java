@@ -1,6 +1,8 @@
 package com.example.lab3.presentation.controller;
 
-import com.example.lab3.application.usecase.task.*;
+import com.example.lab3.application.command.task.*;
+import com.example.lab3.application.query.task.GetTasksQuery;
+import com.example.lab3.application.query.task.GetTasksQueryHandler;
 import com.example.lab3.presentation.mapper.TaskDtoMapper;
 import com.example.lab3.presentation.dto.request.TaskCreateDto;
 import com.example.lab3.presentation.dto.request.TaskReassignDto;
@@ -19,11 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TaskController {
 
-    private final CreateTaskUseCase createUseCase;
-    private final UpdateTaskStatusUseCase statusUseCase;
-    private final ReassignTaskUseCase reassignUseCase;
-    private final SoftDeleteTaskUseCase deleteUseCase;
-    private final GetTasksUseCase getUseCase;
+    private final CreateTaskCommandHandler createUseCase;
+    private final UpdateTaskStatusCommandHandler statusUseCase;
+    private final ReassignTaskCommandHandler reassignUseCase;
+    private final SoftDeleteTaskCommandHandler deleteUseCase;
+    private final GetTasksQueryHandler getUseCase;
 
     @GetMapping
     public ResponseEntity<Page<TaskResponseDto>> getTasksFiltered(
@@ -33,33 +35,35 @@ public class TaskController {
             Long assigneeId,
             Pageable pageable
     ) {
-        return ResponseEntity.ok(
-                getUseCase.execute(status, priority, projectId, assigneeId, pageable)
-                        .map(TaskDtoMapper::toResponseDto)
-        );
+        GetTasksQuery query = new GetTasksQuery(status, priority, projectId, assigneeId, pageable);
+
+        Page<TaskResponseDto> page = getUseCase.handle(query)
+                .map(TaskDtoMapper::toResponseDto);
+
+        return ResponseEntity.ok(page);
     }
 
     @PostMapping
     public ResponseEntity<Void> createTask(@RequestBody TaskCreateDto dto) {
-        createUseCase.execute(TaskDtoMapper.toCommand(dto));
+        createUseCase.handle(TaskDtoMapper.toCommand(dto));
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/status")
     public ResponseEntity<Void> updateTaskStatus(@RequestBody TaskStatusUpdateDto dto) {
-        statusUseCase.execute(dto.getTaskId(), dto.getStatus());
+        statusUseCase.handle(new UpdateTaskStatusCommand(dto.getTaskId(), dto.getStatus()));
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/assignee")
     public ResponseEntity<Void> reassignTask(@RequestBody TaskReassignDto dto) {
-        reassignUseCase.execute(dto.getTaskId(), dto.getNewAssigneeUserId());
+        reassignUseCase.handle(new ReassignTaskCommand(dto.getTaskId(), dto.getNewAssigneeUserId()));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteTask(@PathVariable Long id) {
-        deleteUseCase.execute(id);
+        deleteUseCase.handle(new SoftDeleteTaskCommand(id));
         return ResponseEntity.ok().build();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.lab3.unit.application.usecase.task;
 
-import com.example.lab3.application.usecase.task.ReassignTaskUseCase;
+import com.example.lab3.application.command.task.ReassignTaskCommand;
+import com.example.lab3.application.command.task.ReassignTaskCommandHandler;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.domain.model.User;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ReassignTaskUseCaseTest {
+class ReassignTaskCommandHandlerTest {
 
     @Mock
     private TaskRepository taskRepository;
@@ -30,10 +31,10 @@ class ReassignTaskUseCaseTest {
     private ProjectMemberRepository memberRepository;
 
     @InjectMocks
-    private ReassignTaskUseCase useCase;
+    private ReassignTaskCommandHandler useCase;
 
     @Test
-    void execute_WhenValid_ShouldReassignTask() {
+    void handle_WhenValid_ShouldReassignTask() {
         Long taskId = 1L;
         Long newAssigneeId = 2L;
         Long projectId = 10L;
@@ -44,32 +45,32 @@ class ReassignTaskUseCaseTest {
         when(userRepository.findById(newAssigneeId)).thenReturn(Optional.of(mock(User.class)));
         when(memberRepository.exists(projectId, newAssigneeId)).thenReturn(true);
 
-        useCase.execute(taskId, newAssigneeId);
+        useCase.handle(new ReassignTaskCommand(taskId, newAssigneeId));
 
         verify(task).reassign(newAssigneeId);
         verify(taskRepository).save(task);
     }
 
     @Test
-    void execute_WhenTaskNotFound_ShouldThrowException() {
+    void handle_WhenTaskNotFound_ShouldThrowException() {
         when(taskRepository.findById(1L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(1L, 2L));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(new ReassignTaskCommand(1L, 2L)));
         assertEquals("TASK_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenUserNotFound_ShouldThrowException() {
+    void handle_WhenUserNotFound_ShouldThrowException() {
         Task task = mock(Task.class);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(1L, 2L));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(new ReassignTaskCommand(1L, 2L)));
         assertEquals("USER_NOT_FOUND", exception.getMessage());
     }
 
     @Test
-    void execute_WhenAssigneeNotMember_ShouldThrowException() {
+    void handle_WhenAssigneeNotMember_ShouldThrowException() {
         Long taskId = 1L;
         Long newAssigneeId = 2L;
         Long projectId = 10L;
@@ -80,7 +81,7 @@ class ReassignTaskUseCaseTest {
         when(userRepository.findById(newAssigneeId)).thenReturn(Optional.of(mock(User.class)));
         when(memberRepository.exists(projectId, newAssigneeId)).thenReturn(false);
 
-        DomainError exception = assertThrows(DomainError.class, () -> useCase.execute(taskId, newAssigneeId));
+        DomainError exception = assertThrows(DomainError.class, () -> useCase.handle(new ReassignTaskCommand(taskId, newAssigneeId)));
         assertEquals("ASSIGNEE_NOT_PROJECT_MEMBER", exception.getMessage());
     }
 }

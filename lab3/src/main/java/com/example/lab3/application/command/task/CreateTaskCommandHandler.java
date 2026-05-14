@@ -1,6 +1,5 @@
-package com.example.lab3.application.usecase.task;
+package com.example.lab3.application.command.task;
 
-import com.example.lab3.application.command.task.CreateTaskCommand;
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.domain.repository.ProjectRepository;
@@ -12,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CreateTaskUseCase {
+public class CreateTaskCommandHandler {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void execute(CreateTaskCommand cmd) {
+    public void handle(CreateTaskCommand cmd) {
 
         projectRepository.findById(cmd.projectId())
                 .orElseThrow(() -> new DomainError("PROJECT_NOT_FOUND"));

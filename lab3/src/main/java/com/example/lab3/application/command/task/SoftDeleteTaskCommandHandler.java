@@ -1,4 +1,4 @@
-package com.example.lab3.application.usecase.task;
+package com.example.lab3.application.command.task;
 
 import com.example.lab3.domain.error.DomainError;
 import com.example.lab3.domain.model.Task;
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SoftDeleteTaskUseCase {
+public class SoftDeleteTaskCommandHandler {
 
     private final TaskRepository repository;
 
     @Transactional
-    public void execute(Long id) {
+    public void handle(SoftDeleteTaskCommand cmd) {
 
-        Task task = repository.findById(id)
+        Task task = repository.findById(cmd.taskId())
                 .orElseThrow(() -> new DomainError("TASK_NOT_FOUND"));
 
         task.softDelete();

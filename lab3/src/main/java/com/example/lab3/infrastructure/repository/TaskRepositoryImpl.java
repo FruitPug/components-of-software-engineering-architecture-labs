@@ -1,7 +1,5 @@
 package com.example.lab3.infrastructure.repository;
 
-import com.example.lab3.domain.enums.TaskPriority;
-import com.example.lab3.domain.enums.TaskStatus;
 import com.example.lab3.domain.model.Task;
 import com.example.lab3.domain.repository.TaskRepository;
 import com.example.lab3.infrastructure.mapper.TaskMapper;
@@ -12,8 +10,6 @@ import com.example.lab3.infrastructure.persistence.repository.JpaProjectReposito
 import com.example.lab3.infrastructure.persistence.repository.JpaTaskRepository;
 import com.example.lab3.infrastructure.persistence.repository.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -45,13 +41,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public Optional<Task> findById(Long id) {
         return jpaRepository.findById(id)
-                .map(TaskMapper::toDomain);
-    }
-
-    @Override
-    public Page<Task> search(TaskStatus status, TaskPriority priority,
-                             Long projectId, Long assigneeId, Pageable pageable) {
-        return jpaRepository.searchTasksFiltered(status, priority, projectId, assigneeId, pageable)
                 .map(TaskMapper::toDomain);
     }
 
