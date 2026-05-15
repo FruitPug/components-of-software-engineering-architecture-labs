@@ -1,0 +1,33 @@
+package com.example.lab4.infrastructure.persistence.repository;
+
+import com.example.lab4.infrastructure.persistence.entity.TaskCommentEntity;
+import com.example.lab4.infrastructure.persistence.entity.TaskEntity;
+import com.example.lab4.infrastructure.persistence.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface JpaTaskCommentRepository extends JpaRepository<TaskCommentEntity, Long> {
+
+    Optional<TaskCommentEntity> findByAuthorAndTask(UserEntity author, TaskEntity task);
+
+    @Query(value = "select * from task_comments where id = :id", nativeQuery = true)
+    Optional<TaskCommentEntity> findRawById(Long id);
+
+    @Query("""
+        select tc from TaskCommentEntity tc
+        where (:taskId is null or tc.task.id = :taskId)
+            and (:userId is null or tc.author.id = :userId)
+    """)
+    Page<TaskCommentEntity> searchCommentsFiltered(
+            Long taskId,
+            Long userId,
+            Pageable pageable
+    );
+
+}

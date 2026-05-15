@@ -1,0 +1,23 @@
+package com.example.lab4.infrastructure.persistence.repository;
+
+import com.example.lab4.infrastructure.persistence.entity.TagEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface JpaTagRepository extends JpaRepository<TagEntity, Long> {
+
+    @Query(value = "select * from tags where id = :id", nativeQuery = true)
+    Optional<TagEntity> findRawById(Long id);
+
+    @Query("""
+        select t from TagEntity t
+        where (:color is null or t.color = :color)
+    """)
+    Page<TagEntity> searchTagsFiltered(String color, Pageable pageable);
+}

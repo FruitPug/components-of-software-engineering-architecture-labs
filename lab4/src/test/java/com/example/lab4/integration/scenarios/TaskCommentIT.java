@@ -1,0 +1,166 @@
+package com.example.lab4.integration.scenarios;
+
+import com.example.lab4.integration.EntityCreator;
+import com.example.lab4.presentation.dto.request.TaskCommentCreateDto;
+import com.example.lab4.infrastructure.persistence.entity.ProjectEntity;
+import com.example.lab4.infrastructure.persistence.entity.TaskCommentEntity;
+import com.example.lab4.infrastructure.persistence.entity.TaskEntity;
+import com.example.lab4.infrastructure.persistence.entity.UserEntity;
+import com.example.lab4.integration.IntegrationTestBase;
+import com.example.lab4.infrastructure.persistence.repository.JpaProjectRepository;
+import com.example.lab4.infrastructure.persistence.repository.JpaTaskCommentRepository;
+import com.example.lab4.infrastructure.persistence.repository.JpaTaskRepository;
+import com.example.lab4.infrastructure.persistence.repository.JpaUserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
+public class TaskCommentIT extends IntegrationTestBase {
+
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+
+    @Autowired private JpaTaskCommentRepository jpaTaskCommentRepository;
+    @Autowired private JpaProjectRepository jpaProjectRepository;
+    @Autowired private JpaUserRepository jpaUserRepository;
+    @Autowired private JpaTaskRepository jpaTaskRepository;
+
+    @Autowired private EntityManager entityManager;
+
+    @Test
+    @Transactional
+    void createTaskComment() throws Exception {
+        UserEntity user = EntityCreator.getUserEntity();
+        jpaUserRepository.save(user);
+
+        ProjectEntity project = EntityCreator.getProjectEntity();
+        jpaProjectRepository.save(project);
+
+        TaskEntity task = EntityCreator.getTaskEntity(user, project);
+        jpaTaskRepository.save(task);
+
+        TaskCommentCreateDto dto = new TaskCommentCreateDto();
+        dto.setTaskId(task.getId());
+        dto.setAuthorUserId(user.getId());
+        dto.setBody("Test comment");
+
+        mockMvc.perform(post("/task-comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().is2xxSuccessful());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        List<TaskCommentEntity> taskComments = jpaTaskCommentRepository.findAll();
+        assertThat(taskComments).hasSize(1);
+        TaskCommentEntity taskComment = taskComments.get(0);
+        assertThat(taskComment.getTask().getId()).isEqualTo(task.getId());
+        assertThat(taskComment.getAuthor().getId()).isEqualTo(user.getId());
+        assertThat(taskComment.getBody()).isEqualTo("Test comment");
+    }
+
+    @Test
+    @Transactional
+    void createTaskComment_whenTaskMissing() throws Exception {
+        UserEntity user = EntityCreator.getUserEntity();
+        jpaUserRepository.save(user);
+
+        TaskCommentCreateDto dto = new TaskCommentCreateDto();
+        dto.setTaskId(999999L);
+        dto.setAuthorUserId(user.getId());
+        dto.setBody("Test comment");
+
+        mockMvc.perform(post("/task-comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @Transactional
+    void softDeleteTaskComment_marksDeletedAndFiltersFromFindById() throws Exception {
+        ProjectEntity project = EntityCreator.getProjectEntity();
+        jpaProjectRepository.save(project);
+
+        UserEntity user = EntityCreator.getUserEntity();
+        jpaUserRepository.save(user);
+
+        TaskEntity task = EntityCreator.getTaskEntity(user, project);
+        jpaTaskRepository.save(task);
+
+        TaskCommentEntity taskComment = EntityCreator.getTaskCommentEntity(user, task);
+        jpaTaskCommentRepository.save(taskComment);
+
+        Long id = taskComment.getId();
+
+        assertThat(jpaTaskCommentRepository.findById(id)).isPresent();
+
+        mockMvc.perform(delete("/task-comments/{id}", id))
+                .andExpect(status().is2xxSuccessful());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        assertThat(jpaTaskCommentRepository.findById(id)).isEmpty();
+
+        TaskCommentEntity raw = jpaTaskCommentRepository.findRawById(id).orElseThrow();
+        assertThat(raw.isDeleted()).isTrue();
+        assertThat(raw.getDeletedAt()).isNotNull();
+    }
+
+    @Test
+    @Transactional
+    void getTaskCommentsFiltered_filtersByTaskAndExcludesSoftDeleted() throws Exception {
+        ProjectEntity project = EntityCreator.getProjectEntity();
+        jpaProjectRepository.save(project);
+
+        UserEntity user = EntityCreator.getUserEntity();
+        jpaUserRepository.save(user);
+
+        TaskEntity task1 = EntityCreator.getTaskEntity(user, project);
+        jpaTaskRepository.save(task1);
+
+        TaskEntity task2 = EntityCreator.getTaskEntity(user, project);
+        jpaTaskRepository.save(task2);
+
+        TaskCommentEntity taskComment1 = EntityCreator.getTaskCommentEntity(user, task1);
+        jpaTaskCommentRepository.save(taskComment1);
+
+        TaskCommentEntity taskComment2 = EntityCreator.getTaskCommentEntity(user, task1);
+        taskComment2.setDeleted(true);
+        taskComment2.setDeletedAt(LocalDateTime.now());
+        jpaTaskCommentRepository.save(taskComment2);
+
+        TaskCommentEntity taskComment3 = EntityCreator.getTaskCommentEntity(user, task2);
+        jpaTaskCommentRepository.save(taskComment3);
+
+        mockMvc.perform(get("/task-comments")
+                        .param("taskId", task1.getId().toString())
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].taskId").value(task1.getId()))
+                .andExpect(jsonPath("$.content[0].authorId").value(user.getId()))
+                .andExpect(jsonPath("$.content[0].body").value(taskComment1.getBody()));
+    }
+}
