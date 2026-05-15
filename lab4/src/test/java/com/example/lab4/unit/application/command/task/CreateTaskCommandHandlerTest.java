@@ -10,6 +10,8 @@ import com.example.lab4.domain.model.User;
 import com.example.lab4.domain.repository.ProjectRepository;
 import com.example.lab4.domain.repository.TaskRepository;
 import com.example.lab4.domain.repository.UserRepository;
+import com.example.lab4.domain.service.notification.NotificationService;
+import com.example.lab4.domain.service.notification.TaskCreatedNotification;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,21 +34,27 @@ class CreateTaskCommandHandlerTest {
     private ProjectRepository projectRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private CreateTaskCommandHandler useCase;
 
     @Test
-    void handle_WhenValid_ShouldCreateTask() {
+    void handle_WhenValid_ShouldCreateTaskAndSendNotification() {
         CreateTaskCommand cmd = new CreateTaskCommand(1L, 2L, 3L, "Task 1", "Desc", TaskPriority.HIGH, LocalDate.now());
+        Task task = new Task(1L, 2L, 3L, "Task 1", "Desc", TaskPriority.HIGH, LocalDate.now());
+        task.setId(100L);
+
         when(projectRepository.findById(1L)).thenReturn(Optional.of(mock(Project.class)));
         when(userRepository.findById(2L)).thenReturn(Optional.of(mock(User.class)));
         when(userRepository.findById(3L)).thenReturn(Optional.of(mock(User.class)));
-        when(taskRepository.save(any(Task.class))).thenReturn(mock(Task.class));
+        when(taskRepository.save(any(Task.class))).thenReturn(task);
 
         useCase.handle(cmd);
 
         verify(taskRepository).save(any(Task.class));
+        verify(notificationService).sendTaskCreatedNotification(any(TaskCreatedNotification.class));
     }
 
     @Test

@@ -5,10 +5,14 @@ import com.example.lab4.domain.model.Task;
 import com.example.lab4.domain.repository.ProjectRepository;
 import com.example.lab4.domain.repository.TaskRepository;
 import com.example.lab4.domain.repository.UserRepository;
+import com.example.lab4.domain.service.notification.NotificationService;
+import com.example.lab4.domain.service.notification.TaskCreatedNotification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateTaskCommandHandler {
@@ -16,6 +20,8 @@ public class CreateTaskCommandHandler {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+
+    private final NotificationService notificationService;
 
     @Transactional
     public void handle(CreateTaskCommand cmd) {
@@ -43,5 +49,23 @@ public class CreateTaskCommandHandler {
 
         Task savedTask = taskRepository.save(task);
         task.setId(savedTask.getId());
+
+        try {
+            notificationService.sendTaskCreatedNotification(
+                new TaskCreatedNotification(
+                    task.getId(),
+                    task.getTitle(),
+                    task.getProjectId(),
+                    task.getCreatorId(),
+                    task.getAssigneeId()
+                )
+            );
+        } catch (Exception e) {
+            log.error(
+                "Failed to send task created notification for task {}",
+                task.getId(),
+                e
+            );
+        }
     }
 }
