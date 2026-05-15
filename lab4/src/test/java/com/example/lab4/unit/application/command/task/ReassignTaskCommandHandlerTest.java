@@ -2,6 +2,8 @@ package com.example.lab4.unit.application.command.task;
 
 import com.example.lab4.application.command.task.ReassignTaskCommand;
 import com.example.lab4.application.command.task.ReassignTaskCommandHandler;
+import com.example.lab4.domain.event.EventBus;
+import com.example.lab4.domain.event.TaskReassignedEvent;
 import com.example.lab4.domain.error.DomainError;
 import com.example.lab4.domain.model.Task;
 import com.example.lab4.domain.model.User;
@@ -29,26 +31,31 @@ class ReassignTaskCommandHandlerTest {
     private UserRepository userRepository;
     @Mock
     private ProjectMemberRepository memberRepository;
+    @Mock
+    private EventBus eventBus;
 
     @InjectMocks
     private ReassignTaskCommandHandler useCase;
 
     @Test
-    void handle_WhenValid_ShouldReassignTask() {
+    void handle_WhenValid_ShouldReassignTaskAndPublishEvent() {
         Long taskId = 1L;
         Long newAssigneeId = 2L;
         Long projectId = 10L;
 
         Task task = mock(Task.class);
         when(task.getProjectId()).thenReturn(projectId);
+        when(task.getAssigneeId()).thenReturn(newAssigneeId); // after save
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
         when(userRepository.findById(newAssigneeId)).thenReturn(Optional.of(mock(User.class)));
         when(memberRepository.exists(projectId, newAssigneeId)).thenReturn(true);
+        when(taskRepository.save(task)).thenReturn(task);
 
         useCase.handle(new ReassignTaskCommand(taskId, newAssigneeId));
 
         verify(task).reassign(newAssigneeId);
         verify(taskRepository).save(task);
+        verify(eventBus).publish(any(TaskReassignedEvent.class));
     }
 
     @Test
